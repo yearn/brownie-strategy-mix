@@ -38,6 +38,12 @@ TODO
 
 - Install npm dependencies: `npm install`
 
+- Install project dependencies:
+```
+$ brownie pm install iearn-finance/yearn-vaults@0.1.1
+$ brownie pm install OpenZeppelin/openzeppelin-contracts@3.1.0
+```
+
 - Copy `.env.example` to `.env`
 
 - Setup `ETHERSCAN_TOKEN` & `WEB3_INFURA_PROJECT_ID` on `.env`
