@@ -1,5 +1,5 @@
 import pytest
-
+from brownie import config
 
 @pytest.fixture
 def andre(accounts):
@@ -30,7 +30,8 @@ def guardian(accounts):
 
 
 @pytest.fixture
-def vault(gov, rewards, guardian, token, Vault):
+def vault(pm, gov, rewards, guardian, token):
+    Vault = pm(config["dependencies"][0]).Vault
     vault = guardian.deploy(Vault, token, gov, rewards, "", "")
     yield vault
 
