@@ -2,7 +2,7 @@
 
 ### What you'll find here
 
-Solidity Smart Contract template for creating your own contract.
+Solidity Smart Contract template for creating your own contract in the Brownie framework.
 
 Interfaces for some of the most used DeFi protocols on ethereum mainnet.
 
@@ -12,11 +12,11 @@ Sample test suite that runs on mainnet fork.
 
 Let's say Alice holds 100 DAI and wants to start earning yield % on them.
 
-For this Alice needs to `DAI.approve(yVault.address, 100)`.
+For this Alice needs to `DAI.approve(vault.address, 100)`.
 
-Then Alice will call `yVault.deposit(100)`.
+Then Alice will call `vault.deposit(100)`.
 
-yVault will then transfer 100 DAI from Alice to itself, and mint Alice the corresponding shares.
+Vault will then transfer 100 DAI from Alice to itself, and mint Alice the corresponding shares.
 
 Alice can then redeem those shares using `yVault.withdrawAll()` for the corresponding DAI balance.
 
@@ -52,6 +52,6 @@ $ brownie pm install OpenZeppelin/openzeppelin-contracts@3.1.0
 
 ### Useful commands
 
-- Compile contracts with: `npm run compile`
+- Compile contracts with: `brownie compile` (or `brownie compile --size` to see EVM bytecode sizes)
 
-- Run tests with: `npm test`
+- Run tests with: `brownie test`
