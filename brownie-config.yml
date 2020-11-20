@@ -8,7 +8,7 @@ autofetch_sources: True
 
 # require OpenZepplin Contracts
 dependencies:
-  - iearn-finance/yearn-vaults@0.1.3
+  - iearn-finance/yearn-vaults@0.2.0
   - OpenZeppelin/openzeppelin-contracts@3.1.0
 
 # path remapping to support imports from GitHub/NPM
@@ -16,7 +16,7 @@ compiler:
   solc:
     version: 0.6.12
     remappings:
-      - "@yearnvaults=iearn-finance/yearn-vaults@0.1.3"
+      - "@yearnvaults=iearn-finance/yearn-vaults@0.2.0"
       - "@openzeppelinV3=OpenZeppelin/openzeppelin-contracts@3.1.0"
 
 reports:
