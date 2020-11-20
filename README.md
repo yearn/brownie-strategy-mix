@@ -30,7 +30,7 @@ TODO
 
 - Install Dev dependencies: `pip3 install -r requirements-dev.txt`
 
-  - Use whatever pip version avaiable
+  - Use whatever pip version available
 
 - Install ganache-cli: `npm install -g ganache-cli@6.12.0`
 
