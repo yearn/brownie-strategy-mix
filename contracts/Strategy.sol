@@ -101,21 +101,21 @@ contract Strategy is BaseStrategy {
     }
 
     /*
-     * Make as much capital as possible "free" for the Vault to take. Some slippage
-     * is allowed, since when this method is called the strategist is no longer receiving
-     * their performance fee. The goal is for the strategy to divest as quickly as possible
+     * Make as much capital as possible "free" for the Vault to take. Some
+     * slippage is allowed. The goal is for the strategy to divest as quickly as possible
      * while not suffering exorbitant losses. This function is used during emergency exit
      * instead of `prepareReturn()`. This method returns any realized losses incurred, and
      * should also return the amount of `want` tokens available to repay outstanding debt
      * to the Vault.
      */
-    function exitPosition()
+    function exitPosition(uint256 _debtOutstanding)
         internal
         override
-        returns (uint256 _loss, uint256 _debtPayment)
+        returns (uint256 _profit, uint256 _loss, uint256 _debtPayment)
     {
         // TODO: Do stuff here to free up as much as possible of all positions back into `want`
-        // TODO: returns any realized losses incurred, and should also return the amount of `want` tokens available to repay back to the Vault.
+        // TODO: returns any realized profit/losses incurred, and should also return the amount
+        // of `want` tokens available to repay back to the Vault.
     }
 
     /*
