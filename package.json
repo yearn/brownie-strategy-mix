@@ -1,0 +1,14 @@
+{
+    "name": "yearn-protocol",
+    "devDependencies": {
+        "ethlint": "^1.2.5",
+        "prettier": "^2.1.2",
+        "prettier-plugin-solidity": "^1.0.0-alpha.57",
+        "pretty-quick": "^3.0.2"
+    },
+    "scripts": {
+        "lint": "pretty-quick --pattern '**/*.*(sol|json)' --verbose",
+        "lint:check": "prettier --check **/*.sol **/*.json",
+        "lint:fix": "pretty-quick --pattern '**/*.*(sol|json)' --staged --verbose"
+    }
+}
