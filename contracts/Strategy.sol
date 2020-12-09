@@ -143,7 +143,7 @@ contract Strategy is BaseStrategy {
     }
 
     // Override this to add all tokens/tokenized positions this contract manages
-    // on a *persistant* basis (e.g. not just for swapping back to want ephemerally)
+    // on a *persistent* basis (e.g. not just for swapping back to want ephemerally)
     // NOTE: Do *not* include `want`, already included in `sweep` below
     //
     // Example:
