@@ -4,7 +4,7 @@
 
 - Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
 
-- Interfaces for some of the most used DeFi protocols on ethereum mainnet. (`interfaces/`)
+- Interfaces for some of the most used DeFi protocols on ethereum mainnet. ([`interfaces/`](`interfaces/`))
 
 - Sample test suite that runs on mainnet fork. ([`tests/`](tests))
 
