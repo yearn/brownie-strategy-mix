@@ -57,7 +57,7 @@ $ brownie console
 2. Create variables for the Yearn Vault and Want Token addresses. These were obtained from the Yearn Registry. Also, loan the Yearn governance multisig.
 
 ```python
->>> vault = Vault.at("0x9B142C2CDAb89941E9dcd0B6C1cf6dEa378A8D7C")  # yvDAI (v0.2.2)
+>>> vault = Vault.at("0xBFa4D8AA6d8a379aBFe7793399D3DdaCC5bBECBB")  # yvDAI (v0.2.2)
 >>> token = Token.at("0x6b175474e89094c44da98b954eedeac495271d0f")  # DAI
 >>> gov = "ychad.eth"  # ENS for Yearn Governance Multisig
 ```
