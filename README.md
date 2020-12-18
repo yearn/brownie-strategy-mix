@@ -1,57 +1,172 @@
-# Yearn Strategy Mix
+# Yearn Strategy Brownie Mix
 
-### What you'll find here
+## What you'll find here
 
-Solidity Smart Contract template for creating your own contract in the Brownie framework.
+- Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
 
-Interfaces for some of the most used DeFi protocols on ethereum mainnet.
+- Interfaces for some of the most used DeFi protocols on ethereum mainnet. ([`interfaces/`](`interfaces/`))
 
-Sample test suite that runs on mainnet fork.
+- Sample test suite that runs on mainnet fork. ([`tests/`](tests))
 
-### How does it work for the User
+This mix is configured for use with [Ganache](https://github.com/trufflesuite/ganache-cli) on a [forked mainnet](https://eth-brownie.readthedocs.io/en/stable/network-management.html#using-a-forked-development-network).
+
+## How does it work for the User
 
 Let's say Alice holds 100 DAI and wants to start earning yield % on them.
 
 For this Alice needs to `DAI.approve(vault.address, 100)`.
 
-Then Alice will call `vault.deposit(100)`.
+Then Alice will call `Vault.deposit(100)`.
 
 Vault will then transfer 100 DAI from Alice to itself, and mint Alice the corresponding shares.
 
-Alice can then redeem those shares using `yVault.withdrawAll()` for the corresponding DAI balance.
+Alice can then redeem those shares using `Vault.withdrawAll()` for the corresponding DAI balance (exchanged at `Vault.pricePerShare()`).
 
-### How does it work for the Vault
+## Installation and Setup
 
-TODO
+1. [Install Brownie](https://eth-brownie.readthedocs.io/en/stable/install.html) & [Ganache-CLI](https://github.com/trufflesuite/ganache-cli), if you haven't already.
 
-### Requirements
+2. Sign up for [Infura](https://infura.io/) and generate an API key. Store it in the `WEB3_INFURA_PROJECT_ID` environment variable.
 
-- [Install Brownie](https://eth-brownie.readthedocs.io/en/stable/install.html)
-
-- Install Dev dependencies: `pip3 install -r requirements-dev.txt`
-
-  - Use whatever pip version available
-
-- Install ganache-cli: `npm install -g ganache-cli@6.12.0`
-
-  - > For those of you using Node 14, you'll need to launch ganache-cli via node 8, 10, or 12 until this is fixed. For example, run nvm use 12 && npm install ganache-cli -g to install for node 12, and then run ganache-cli with nvm use 12 && ganache-cli.
-
-- Install npm dependencies: `npm install`
-
-- Install project dependencies:
-
-```
-$ brownie pm install iearn-finance/yearn-vaults@0.2.0
-$ brownie pm install OpenZeppelin/openzeppelin-contracts@3.1.0
+```bash
+export WEB3_INFURA_PROJECT_ID=YourProjectID
 ```
 
-- Copy `.env.example` to `.env`
+3. Sign up for [Etherscan](www.etherscan.io) and generate an API key. This is required for fetching source codes of the mainnet contracts we will be interacting with. Store the API key in the `ETHERSCAN_TOKEN` environment variable.
 
-- Setup `ETHERSCAN_TOKEN` & `WEB3_INFURA_PROJECT_ID` on `.env`
-  - Get them from: [etherscan](https://etherscan.io/apis) and [infura](https://infura.io/) respectively
+```bash
+export ETHERSCAN_TOKEN=YourApiToken
+```
 
-### Useful commands
+4. Download the mix.
 
-- Compile contracts with: `brownie compile` (or `brownie compile --size` to see EVM bytecode sizes)
+```bash
+brownie bake yearn-strategy
+```
 
-- Run tests with: `brownie test`
+## Basic Use
+
+To deploy the demo Yearn Strategy in a development environment:
+
+1. Open the Brownie console. This automatically launches Ganache on a forked mainnet.
+
+```bash
+$ brownie console
+```
+
+2. Create variables for the Yearn Vault and Want Token addresses. These were obtained from the Yearn Registry. Also, loan the Yearn governance multisig.
+
+```python
+>>> vault = Vault.at("0xBFa4D8AA6d8a379aBFe7793399D3DdaCC5bBECBB")  # yvDAI (v0.2.2)
+>>> token = Token.at("0x6b175474e89094c44da98b954eedeac495271d0f")  # DAI
+>>> gov = "ychad.eth"  # ENS for Yearn Governance Multisig
+```
+
+3. Deploy the [`Strategy.sol`](contracts/Strategy.sol) contract.
+
+```python
+>>> strategy = Strategy.deploy(vault, {"from": accounts[0]})
+Transaction sent: 0xc8a35b3ecbbed196a344ed6b5c7ee6f50faf9b7eee836044d1c7ffe10093ef45
+  Gas price: 0.0 gwei   Gas limit: 6721975
+  Flashloan.constructor confirmed - Block: 9995378   Gas used: 796934 (11.86%)
+  Flashloan deployed at: 0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87
+```
+
+4. Approve the strategy for the Vault. We must do this because we only approved Strategies can pull funding from the Vault.
+
+```python
+# 1000 DAI debt limit, no rate limit, 50 bps strategist fee
+>>> vault.addStrategy(strategy, Wei("1000 ether"), 2 ** 256 - 1, 50, {"from": gov})
+Transaction sent: 0xa70b90eb9a9899e8f6e709c53a436976315b4279c4b6797d0a293e169f94d5b4
+  Gas price: 0.0 gwei   Gas limit: 6721975
+  Transaction confirmed - Block: 9995379   Gas used: 21055 (0.31%)
+```
+
+5. Now we are ready to put our strategy into action!
+
+```python
+>>> harvest_tx = strategy.harvest({"from": accounts[0]})  # perform as many time as desired...
+```
+
+## Implementing Strategy Logic
+
+[`contracts/Strategy.sol`](contracts/Strategy.sol) is where you implement your own logic for your strategy. In particular:
+
+* Create a descriptive name for your strategy via `Strategy.name()`.
+* Invest your want tokens via `Strategy.adjustPosition()`.
+* Take profits and report losses via `Strategy.prepareReturn()`.
+* Unwind enough of your position to payback withdrawals via `Strategy.liquidatePosition()`.
+* Unwind all of your positions via `Strategy.exitPosition()`.
+* Fill in a way to estimate the total `want` tokens managed by the strategy via `Strategy.estimatedTotalAssets()`.
+* Migrate all the positions managed by your strategy via `Strategy.prepareMigration()`.
+* Make a list of all position tokens that should be protected against movements via `Strategy.protectedTokens()`.
+
+## Testing
+
+To run the tests:
+
+```
+brownie test
+```
+
+The example tests provided in this mix start by deploying and approving your [`Strategy.sol`](contracts/Strategy.sol) contract. This ensures that the loan executes succesfully without any custom logic. Once you have built your own logic, you should edit [`tests/test_flashloan.py`](tests/test_flashloan.py) and remove this initial funding logic.
+
+See the [Brownie documentation](https://eth-brownie.readthedocs.io/en/stable/tests-pytest-intro.html) for more detailed information on testing your project.
+
+## Debugging Failed Transactions
+
+Use the `--interactive` flag to open a console immediatly after each failing test:
+
+```
+brownie test --interactive
+```
+
+Within the console, transaction data is available in the [`history`](https://eth-brownie.readthedocs.io/en/stable/api-network.html#txhistory) container:
+
+```python
+>>> history
+[<Transaction '0x50f41e2a3c3f44e5d57ae294a8f872f7b97de0cb79b2a4f43cf9f2b6bac61fb4'>,
+ <Transaction '0xb05a87885790b579982983e7079d811c1e269b2c678d99ecb0a3a5104a666138'>]
+```
+
+Examine the [`TransactionReceipt`](https://eth-brownie.readthedocs.io/en/stable/api-network.html#transactionreceipt) for the failed test to determine what went wrong. For example, to view a traceback:
+
+```python
+>>> tx = history[-1]
+>>> tx.traceback()
+```
+
+To view a tree map of how the transaction executed:
+
+```python
+>>> tx.call_trace()
+```
+
+See the [Brownie documentation](https://eth-brownie.readthedocs.io/en/stable/core-transactions.html) for more detailed information on debugging failed transactions.
+
+<!--
+## Deployment
+
+When you are finished testing and ready to deploy to the mainnet:
+
+1. [Import a keystore](https://eth-brownie.readthedocs.io/en/stable/account-management.html#importing-from-a-private-key) into Brownie for the account you wish to deploy from.
+2. Edit [`scripts/deployment.py`](scripts/deployment.py) and add your keystore ID according to the comments.
+3. Run the deployment script on the mainnet using the following command:
+
+```bash
+$ brownie run deployment --network mainnet
+```
+
+You will be prompted to enter your keystore password, and then the contract will be deployed.
+-->
+
+## Known issues
+
+### No access to archive state errors
+
+If you are using Ganache to fork a network, then you may have issues with the blockchain archive state every 30 minutes. This is due to your node provider (i.e. Infura) only allowing free users access to 30 minutes of archive state. To solve this, upgrade to a paid plan, or simply restart your ganache instance and redploy your contracts.
+
+# Resources
+
+- Yearn [Discord channel](https://discord.com/invite/6PNv2nF/)
+- Brownie [Gitter channel](https://gitter.im/eth-brownie/community)
