@@ -2,11 +2,11 @@
 
 ## What you'll find here
 
-- Basic Solidity Smart Contract for creating your own Yearn Strategy (`contracts/Strategy.sol`)
+- Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
 
 - Interfaces for some of the most used DeFi protocols on ethereum mainnet. (`interfaces/`)
 
-- Sample test suite that runs on mainnet fork. (`tests/`)
+- Sample test suite that runs on mainnet fork. ([`tests/`](tests))
 
 This mix is configured for use with [Ganache](https://github.com/trufflesuite/ganache-cli) on a [forked mainnet](https://eth-brownie.readthedocs.io/en/stable/network-management.html#using-a-forked-development-network).
 
