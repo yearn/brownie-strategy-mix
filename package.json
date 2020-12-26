@@ -1,23 +1,43 @@
 {
-  "name": "brownie-strategy-mix",
-  "version": "1.0.0",
-  "description": "![Brownie](https://github.com/sambacha/brownie-strategy-mix/workflows/Brownie/badge.svg)",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/iearn-finance/brownie-strategy-mix.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/iearn-finance/brownie-strategy-mix/issues"
-  },
-  "homepage": "https://github.com/iearn-finance/brownie-strategy-mix#readme"
+    "name": "brownie-strategy-mix",
+    "version": "1.0.0",
+    "description": "![Brownie](https://github.com/sambacha/brownie-strategy-mix/workflows/Brownie/badge.svg)",
+    "main": "index.js",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "lint": "pretty-quick --pattern '**/*.*(sol|json)' --verbose",
+        "lint:check": "prettier --check **/*.sol **/*.json",
+        "lint:fix": "pretty-quick --pattern '**/*.*(sol|json)' --staged --verbose"
+    },
+    "devDependencies": {
+        "ethlint": "^1.2.5",
+        "prettier": "^2.1.2",
+        "prettier-plugin-solidity": "^1.0.0-alpha.57",
+        "pretty-quick": "^3.0.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/iearn-finance/brownie-strategy-mix.git"
+    },
+    "keywords": [
+        "defi",
+        "etheruem",
+        "yearn",
+        "fintech",
+        "erc20",
+        "protocol",
+        "cryptocurrency"
+    ],
+    "author": "Yearn Contributors",
+    "license": "AGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/iearn-finance/brownie-strategy-mix/issues"
+    },
+    "homepage": "https://github.com/iearn-finance/brownie-strategy-mix#readme",
+    "dependencies": {
+        "solium": "^1.2.5",
+        "solium-plugin-security": "^0.1.1"
+    }
 }

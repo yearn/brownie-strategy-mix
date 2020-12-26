@@ -1,41 +1,41 @@
 name: Brownie
 
 on:
-  push:
-    branches:
-    - master
-    - develop
-  pull_request:
+    push:
+        branches:
+            - master
+            - develop
+    pull_request:
 
 env:
-  ETHERSCAN_TOKEN:  6776WKCX4XHV7C6NQBTIME6XKM2YNBK29V
-  WEB3_INFURA_PROJECT_ID: 164b1027c8254bf69a309a9ae0b81342
+    ETHERSCAN_TOKEN: 6776WKCX4XHV7C6NQBTIME6XKM2YNBK29V
+    WEB3_INFURA_PROJECT_ID: 164b1027c8254bf69a309a9ae0b81342
 
 jobs:
-  integration:
-    runs-on: ubuntu-latest
+    integration:
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v1
+        steps:
+            - uses: actions/checkout@v1
 
-    - name: Setup node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
+            - name: Setup node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: "12.x"
 
-    - name: Install ganache
-      run: npm install -g ganache-cli@6.11
+            - name: Install ganache
+              run: npm install -g ganache-cli@6.11
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.7
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.7
 
-    - name: Install Python Dependencies
-      run: pip install eth-brownie
+            - name: Install Python Dependencies
+              run: pip install eth-brownie
 
-    - name: Compile contracts
-      run: brownie compile --size
+            - name: Compile contracts
+              run: brownie compile --size
 
-    - name: Run Tests
-      run: brownie test -s
+            - name: Run Tests
+              run: brownie test -s

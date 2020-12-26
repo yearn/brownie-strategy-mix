@@ -2,26 +2,26 @@
 
 ![Brownie](https://github.com/sambacha/brownie-strategy-mix/workflows/Brownie/badge.svg)
 
-- [Yearn Strategy Brownie Mix](#yearn-strategy-brownie-mix)
-  * [What you'll find here](#what-you-ll-find-here)
-  * [How does it work for the User](#how-does-it-work-for-the-user)
-  * [Installation and Setup](#installation-and-setup)
-  * [Basic Use](#basic-use)
-  * [Implementing Strategy Logic](#implementing-strategy-logic)
-  * [Testing](#testing)
-  * [Debugging Failed Transactions](#debugging-failed-transactions)
-  * [Deployment](#deployment)
-  * [Known issues](#known-issues)
-    + [No access to archive state errors](#no-access-to-archive-state-errors)
-- [Resources](#resources)
+-   [Yearn Strategy Brownie Mix](#yearn-strategy-brownie-mix)
+    -   [What you'll find here](#what-you-ll-find-here)
+    -   [How does it work for the User](#how-does-it-work-for-the-user)
+    -   [Installation and Setup](#installation-and-setup)
+    -   [Basic Use](#basic-use)
+    -   [Implementing Strategy Logic](#implementing-strategy-logic)
+    -   [Testing](#testing)
+    -   [Debugging Failed Transactions](#debugging-failed-transactions)
+    -   [Deployment](#deployment)
+    -   [Known issues](#known-issues)
+        -   [No access to archive state errors](#no-access-to-archive-state-errors)
+-   [Resources](#resources)
 
 ## What you'll find here
 
-- Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
+-   Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
 
-- Interfaces for some of the most used DeFi protocols on ethereum mainnet. ([`interfaces/`](`interfaces/`))
+-   Interfaces for some of the most used DeFi protocols on ethereum mainnet. ([`interfaces/`](`interfaces/`))
 
-- Sample test suite that runs on mainnet fork. ([`tests/`](tests))
+-   Sample test suite that runs on mainnet fork. ([`tests/`](tests))
 
 This mix is configured for use with [Ganache](https://github.com/trufflesuite/ganache-cli) on a [forked mainnet](https://eth-brownie.readthedocs.io/en/stable/network-management.html#using-a-forked-development-network).
 
@@ -107,14 +107,14 @@ Transaction sent: 0xa70b90eb9a9899e8f6e709c53a436976315b4279c4b6797d0a293e169f94
 
 [`contracts/Strategy.sol`](contracts/Strategy.sol) is where you implement your own logic for your strategy. In particular:
 
-* Create a descriptive name for your strategy via `Strategy.name()`.
-* Invest your want tokens via `Strategy.adjustPosition()`.
-* Take profits and report losses via `Strategy.prepareReturn()`.
-* Unwind enough of your position to payback withdrawals via `Strategy.liquidatePosition()`.
-* Unwind all of your positions via `Strategy.exitPosition()`.
-* Fill in a way to estimate the total `want` tokens managed by the strategy via `Strategy.estimatedTotalAssets()`.
-* Migrate all the positions managed by your strategy via `Strategy.prepareMigration()`.
-* Make a list of all position tokens that should be protected against movements via `Strategy.protectedTokens()`.
+-   Create a descriptive name for your strategy via `Strategy.name()`.
+-   Invest your want tokens via `Strategy.adjustPosition()`.
+-   Take profits and report losses via `Strategy.prepareReturn()`.
+-   Unwind enough of your position to payback withdrawals via `Strategy.liquidatePosition()`.
+-   Unwind all of your positions via `Strategy.exitPosition()`.
+-   Fill in a way to estimate the total `want` tokens managed by the strategy via `Strategy.estimatedTotalAssets()`.
+-   Migrate all the positions managed by your strategy via `Strategy.prepareMigration()`.
+-   Make a list of all position tokens that should be protected against movements via `Strategy.protectedTokens()`.
 
 ## Testing
 
@@ -183,5 +183,5 @@ If you are using Ganache to fork a network, then you may have issues with the bl
 
 # Resources
 
-- Yearn [Discord channel](https://discord.com/invite/6PNv2nF/)
-- Brownie [Gitter channel](https://gitter.im/eth-brownie/community)
+-   Yearn [Discord channel](https://discord.com/invite/6PNv2nF/)
+-   Brownie [Gitter channel](https://gitter.im/eth-brownie/community)

@@ -1,1 +1,6 @@
 *.vy linguist-language=Python
+git_ssh text eol=lf
+repo text eol=lf
+hooks/* text eol=lf
+* text=auto
+
