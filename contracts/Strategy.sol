@@ -6,10 +6,7 @@ pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 // These are the core Yearn libraries
-import {
-    BaseStrategy,
-    StrategyParams
-} from "@yearnvaults/contracts/BaseStrategy.sol";
+import { BaseStrategy, StrategyParams } from "@yearnvaults/contracts/BaseStrategy.sol";
 import "@openzeppelinV3/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelinV3/contracts/math/SafeMath.sol";
 import "@openzeppelinV3/contracts/utils/Address.sol";
@@ -32,7 +29,7 @@ contract Strategy is BaseStrategy {
 
     // ******** OVERRIDE THESE METHODS FROM BASE CONTRACT ************
 
-    function name() external override pure returns (string memory) {
+    function name() external pure override returns (string memory) {
         // Add your own name here, suggestion e.g. "StrategyCreamYFI"
         return "Strategy<ProtocolName><TokenType>";
     }
@@ -55,7 +52,7 @@ contract Strategy is BaseStrategy {
      *       Vault based on sudden withdrawals. This value should be higher than the
      *       total debt of the strategy and higher than it's expected value to be "safe".
      */
-    function estimatedTotalAssets() public override view returns (uint256) {
+    function estimatedTotalAssets() public view override returns (uint256) {
         // TODO: Build a more accurate estimate using the value of all positions in terms of `want`
         return want.balanceOf(address(this));
     }
@@ -111,7 +108,11 @@ contract Strategy is BaseStrategy {
     function exitPosition(uint256 _debtOutstanding)
         internal
         override
-        returns (uint256 _profit, uint256 _loss, uint256 _debtPayment)
+        returns (
+            uint256 _profit,
+            uint256 _loss,
+            uint256 _debtPayment
+        )
     {
         // TODO: Do stuff here to free up as much as possible of all positions back into `want`
         // TODO: returns any realized profit/losses incurred, and should also return the amount
@@ -122,11 +123,7 @@ contract Strategy is BaseStrategy {
      * Liquidate as many assets as possible to `want`, irregardless of slippage,
      * up to `_amountNeeded`. Any excess should be re-invested here as well.
      */
-    function liquidatePosition(uint256 _amountNeeded)
-        internal
-        override
-        returns (uint256 _amountFreed)
-    {
+    function liquidatePosition(uint256 _amountNeeded) internal override returns (uint256 _amountFreed) {
         // TODO: Do stuff here to free up to `_amountNeeded` from all positions back into `want`
         // NOTE: Return `_amountFreed`, which should be `<= _amountNeeded`
     }
@@ -155,10 +152,5 @@ contract Strategy is BaseStrategy {
     //      protected[2] = tokenC;
     //      return protected;
     //    }
-    function protectedTokens()
-        internal
-        override
-        view
-        returns (address[] memory)
-    {}
+    function protectedTokens() internal view override returns (address[] memory) {}
 }
