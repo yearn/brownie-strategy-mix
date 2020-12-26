@@ -1,5 +1,20 @@
 # Yearn Strategy Brownie Mix
 
+![Brownie](https://github.com/sambacha/brownie-strategy-mix/workflows/Brownie/badge.svg)
+
+- [Yearn Strategy Brownie Mix](#yearn-strategy-brownie-mix)
+  * [What you'll find here](#what-you-ll-find-here)
+  * [How does it work for the User](#how-does-it-work-for-the-user)
+  * [Installation and Setup](#installation-and-setup)
+  * [Basic Use](#basic-use)
+  * [Implementing Strategy Logic](#implementing-strategy-logic)
+  * [Testing](#testing)
+  * [Debugging Failed Transactions](#debugging-failed-transactions)
+  * [Deployment](#deployment)
+  * [Known issues](#known-issues)
+    + [No access to archive state errors](#no-access-to-archive-state-errors)
+- [Resources](#resources)
+
 ## What you'll find here
 
 - Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
