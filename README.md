@@ -1,6 +1,9 @@
 # Yearn Strategy Brownie Mix
 
 ![Brownie](https://github.com/sambacha/brownie-strategy-mix/workflows/Brownie/badge.svg)
+![Lint](https://github.com/sambacha/brownie-strategy-mix/workflows/Lint/badge.svg)
+![Brownie](https://github.com/iearn-finance/brownie-strategy-mix/workflows/Brownie/badge.svg?branch=release%2F0.1.0&event=deployment_status)
+
 
 - [Yearn Strategy Brownie Mix](#yearn-strategy-brownie-mix)
   - [What you'll find here](#what-you-ll-find-here)
