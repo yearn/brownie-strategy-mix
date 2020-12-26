@@ -1,6 +1,7 @@
 import pytest
 from brownie import config
 
+
 @pytest.fixture
 def andre(accounts):
     # Andre, giver of tokens, and maker of yield

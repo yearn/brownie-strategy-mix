@@ -4,5 +4,6 @@
 #           - change in loading (from low to high and high to low)
 #           - strategy operation at different loading levels (anticipated and "extreme")
 
+
 def test_operation():
     pass
