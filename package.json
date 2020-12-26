@@ -1,0 +1,39 @@
+{
+    "name": "yearn-brownie-boilerplate-template",
+    "description": "Setup for Developing Yearn Strategies",
+    "version": "0.0.0",
+    "devDependencies": {
+        "ethlint": "^1.2.5",
+        "prettier": "^2.1.2",
+        "prettier-plugin-solidity": "^1.0.0-alpha.59",
+        "shelljs": "^0.8.4",
+        "solhint": "^3.2.1",
+        "solhint-plugin-prettier": "^0.0.5",
+        "solidity-coverage": "^0.7.11"
+    },
+    "files": [
+        "/contracts"
+    ],
+    "keywords": [
+        "blockchain",
+        "ethereum",
+        "smart-contracts",
+        "solidity"
+    ],
+    "license": "AGPL-3.0",
+    "publishConfig": {
+        "access": "private"
+    },
+    "scripts": {
+        "lint:check": "npx prettier --write .",
+        "compile": "yarn truffle compile && yarn typechain --target truffle './build/**/*.json'",
+        "coverage": "yarn compile && yarn truffle run coverage",
+        "test": "yarn compile && yarn truffle test",
+        "truffle:coverage": "truffle run coverag coverage --solcoverjs ./.solcover.js --network coverage --temp artifacts --testfiles \"./test/**/*.",
+        "lint": "yarn lint lint:sol && yarn run lint:ts && yarn run prettier:list-different",
+        "lint:sol": "solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\"",
+        "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
+        "prettier": "prettier --config .prettierrc --write \"**/*.{js,json,md,sol,ts}\"",
+        "prettier:list-different": "prettier --config .prettierrc --list-different \"**/*.{js,json,md,sol,ts}\""
+    }
+}
