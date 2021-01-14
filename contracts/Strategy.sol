@@ -25,7 +25,7 @@ contract Strategy is BaseStrategy {
 
     constructor(address _vault) public BaseStrategy(_vault) {
         // You can set these parameters on deployment to whatever you want
-        // minReportDelay = 6300;
+        // maxReportDelay = 6300;
         // profitFactor = 100;
         // debtThreshold = 0;
     }
