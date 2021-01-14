@@ -64,10 +64,19 @@ contract Strategy is BaseStrategy {
     function liquidatePosition(uint256 _amountNeeded)
         internal
         override
-        returns (uint256 _amountFreed)
+        returns (uint256 _liquidatedAmount, uint256 _loss)
     {
         // TODO: Do stuff here to free up to `_amountNeeded` from all positions back into `want`
-        // NOTE: Return `_amountFreed`, which should be `<= _amountNeeded`
+        // NOTE: Maintain invariant `want.balanceOf(this) >= _liquidatedAmount`
+        // NOTE: Maintain invariant `_liquidatedAmount + _loss <= _amountNeeded`
+
+        uint256 totalAssets = want.balanceOf(address(this));
+        if (_amountNeeded > totalAssets) {
+            _liquidatedAmount = totalAssets;
+            _loss = _amountNeeded.sub(totalAssets);
+        } else {
+            _liquidatedAmount = _amountNeeded;
+        }
     }
 
     // NOTE: Can override `tendTrigger` and `harvestTrigger` if necessary
