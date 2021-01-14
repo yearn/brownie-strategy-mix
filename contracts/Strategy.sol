@@ -61,16 +61,6 @@ contract Strategy is BaseStrategy {
         // NOTE: Try to adjust positions so that `_debtOutstanding` can be freed up on *next* harvest (not immediately)
     }
 
-    function exitPosition(uint256 _debtOutstanding)
-        internal
-        override
-        returns (uint256 _profit, uint256 _loss, uint256 _debtPayment)
-    {
-        // TODO: Do stuff here to free up as much as possible of all positions back into `want`
-        // TODO: returns any realized profit/losses incurred, and should also return the amount
-        // of `want` tokens available to repay back to the Vault.
-    }
-
     function liquidatePosition(uint256 _amountNeeded)
         internal
         override
