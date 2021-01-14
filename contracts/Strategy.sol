@@ -32,7 +32,7 @@ contract Strategy is BaseStrategy {
 
     // ******** OVERRIDE THESE METHODS FROM BASE CONTRACT ************
 
-    function name() external override pure returns (string memory) {
+    function name() external override view returns (string memory) {
         // Add your own name here, suggestion e.g. "StrategyCreamYFI"
         return "Strategy<ProtocolName><TokenType>";
     }
