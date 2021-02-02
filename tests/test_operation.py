@@ -4,7 +4,7 @@ from brownie import Contract
 def test_operation(accounts, token, vault, strategy, strategist):
     # First you need to get some funds for the token you are about to use,
     # in this example it impersonate an exchange address to use it's funds.
-    amount = 10_000 * 10e18
+    amount = 10_000 * 10 ** token.decimals()
     reserve = accounts.at("0xd551234ae421e3bcba99a0da6d736074f22192ff", force=True)
     token.transfer(accounts[0], amount, {"from": reserve})
 

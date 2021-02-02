@@ -36,7 +36,7 @@ def keeper(accounts):
 @pytest.fixture
 def token():
     token_address = "0x6b175474e89094c44da98b954eedeac495271d0f"  # this should be the address of the ERC-20 used by the strategy/vault
-    yield Contract.from_explorer(token_address)
+    yield Contract(token_address)
 
 
 @pytest.fixture
@@ -53,5 +53,5 @@ def vault(pm, gov, rewards, guardian, management, token):
 def strategy(strategist, keeper, vault, Strategy, gov):
     strategy = strategist.deploy(Strategy, vault)
     strategy.setKeeper(keeper)
-    vault.addStrategy(strategy, 10_000, 10_000, 10, {"from": gov})
+    vault.addStrategy(strategy, 10_000, 0, 1_000, {"from": gov})
     yield strategy
