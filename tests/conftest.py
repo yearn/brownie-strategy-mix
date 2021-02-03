@@ -40,6 +40,16 @@ def token():
 
 
 @pytest.fixture
+def amount(accounts, token):
+    amount = 10_000 * 10 ** token.decimals()
+    # In order to get some funds for the token you are about to use,
+    # it impersonate an exchange address to use it's funds.
+    reserve = accounts.at("0xd551234ae421e3bcba99a0da6d736074f22192ff", force=True)
+    token.transfer(accounts[0], amount, {"from": reserve})
+    yield amount
+
+
+@pytest.fixture
 def vault(pm, gov, rewards, guardian, management, token):
     Vault = pm(config["dependencies"][0]).Vault
     vault = guardian.deploy(Vault)
