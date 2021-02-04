@@ -17,7 +17,6 @@ import {
     Address
 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-
 // Import interfaces for many popular DeFi projects, or add your own!
 //import "../interfaces/<protocol>/<Interface>.sol";
 
@@ -35,12 +34,12 @@ contract Strategy is BaseStrategy {
 
     // ******** OVERRIDE THESE METHODS FROM BASE CONTRACT ************
 
-    function name() external override view returns (string memory) {
+    function name() external view override returns (string memory) {
         // Add your own name here, suggestion e.g. "StrategyCreamYFI"
         return "Strategy<ProtocolName><TokenType>";
     }
 
-    function estimatedTotalAssets() public override view returns (uint256) {
+    function estimatedTotalAssets() public view override returns (uint256) {
         // TODO: Build a more accurate estimate using the value of all positions in terms of `want`
         return want.balanceOf(address(this));
     }
@@ -104,8 +103,8 @@ contract Strategy is BaseStrategy {
     //    }
     function protectedTokens()
         internal
-        override
         view
+        override
         returns (address[] memory)
     {}
 }
