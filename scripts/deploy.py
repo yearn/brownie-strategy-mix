@@ -47,4 +47,4 @@ def main():
     if input("Deploy Strategy? y/[N]: ").lower() != "y":
         return
 
-    strategy = Strategy.deploy(vault, {"from": dev})
+    strategy = Strategy.deploy(vault, {"from": dev}, publish_source=True)
