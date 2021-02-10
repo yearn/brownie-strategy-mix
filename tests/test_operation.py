@@ -1,3 +1,4 @@
+import brownie
 from brownie import Contract
 
 
@@ -66,3 +67,27 @@ def test_change_debt(gov, token, vault, strategy, strategist, amount):
     # TODO: uncomment the following lines.
     # vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
     # assert token.balanceOf(strategy.address) == amount / 2
+
+
+def test_sweep(gov, vault, strategy, token, amount, weth, weth_amout):
+    # Strategy want token doesn't work
+    token.transfer(strategy, amount, {"from": gov})
+    assert token.address == strategy.want()
+    assert token.balanceOf(strategy) > 0
+    with brownie.reverts("!want"):
+        strategy.sweep(token, {"from": gov})
+
+    # Vault share token doesn't work
+    with brownie.reverts("!shares"):
+        strategy.sweep(vault.address, {"from": gov})
+
+    # TODO: If you add protected tokens to the strategy.
+    # Protected token doesn't work
+    # with brownie.reverts("!protected"):
+    #     strategy.sweep(strategy.protectedToken(), {"from": gov})
+
+    weth.transfer(strategy, weth_amout, {"from": gov})
+    assert weth.address != strategy.want()
+    assert weth.balanceOf(gov) == 0
+    strategy.sweep(weth, {"from": gov})
+    assert weth.balanceOf(gov) == weth_amout
