@@ -35,7 +35,7 @@ def keeper(accounts):
 
 @pytest.fixture
 def token():
-    token_address = "0x6b175474e89094c44da98b954eedeac495271d0f"  # this should be the address of the ERC-20 used by the strategy/vault
+    token_address = "0x6b175474e89094c44da98b954eedeac495271d0f"  # this should be the address of the ERC-20 used by the strategy/vault (DAI)
     yield Contract(token_address)
 
 
@@ -47,6 +47,19 @@ def amount(accounts, token):
     reserve = accounts.at("0xd551234ae421e3bcba99a0da6d736074f22192ff", force=True)
     token.transfer(accounts[0], amount, {"from": reserve})
     yield amount
+
+
+@pytest.fixture
+def weth():
+    token_address = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+    yield Contract(token_address)
+
+
+@pytest.fixture
+def weth_amout(gov, weth):
+    weth_amout = 10 ** weth.decimals()
+    gov.transfer(weth, weth_amout)
+    yield weth_amout
 
 
 @pytest.fixture
