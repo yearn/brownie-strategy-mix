@@ -14,14 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Cache Compiler Installations
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.solcx
-          ~/.vvm
-        key: compiler-cache
-
     - name: Cache compiler installations
       uses: actions/cache@v2
       with:
