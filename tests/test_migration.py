@@ -2,15 +2,22 @@
 #       Use another copy of the strategy to simulate the migration
 #       Show that nothing is lost!
 
+import pytest
 
-def test_migration(token, vault, strategy, amount, Strategy, strategist, gov):
+
+def test_migration(
+    token, vault, strategy, amount, Strategy, strategist, gov, RELATIVE_APPROX
+):
     # Deposit to the vault and harvest
     token.approve(vault.address, amount, {"from": gov})
     vault.deposit(amount, {"from": gov})
     strategy.harvest()
-    assert token.balanceOf(strategy.address) == amount
+    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # migrate to a new strategy
     new_strategy = strategist.deploy(Strategy, vault)
     strategy.migrate(new_strategy.address, {"from": gov})
-    assert token.balanceOf(new_strategy.address) == amount
+    assert (
+        pytest.approx(new_strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX)
+        == amount
+    )
