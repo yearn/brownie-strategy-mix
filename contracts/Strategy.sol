@@ -2,7 +2,7 @@
 // Feel free to change the license, but this is what we use
 
 // Feel free to change this version of Solidity. We support >=0.6.0 <0.7.0;
-pragma solidity 0.6.12;
+pragma solidity 0.8.3;
 pragma experimental ABIEncoderV2;
 
 // These are the core Yearn libraries
@@ -12,10 +12,9 @@ import {
 } from "@yearnvaults/contracts/BaseStrategy.sol";
 import {
     SafeERC20,
-    SafeMath,
     IERC20,
     Address
-} from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 // Import interfaces for many popular DeFi projects, or add your own!
 //import "../interfaces/<protocol>/<Interface>.sol";
@@ -23,9 +22,8 @@ import {
 contract Strategy is BaseStrategy {
     using SafeERC20 for IERC20;
     using Address for address;
-    using SafeMath for uint256;
 
-    constructor(address _vault) public BaseStrategy(_vault) {
+    constructor(address _vault) BaseStrategy(_vault) {
         // You can set these parameters on deployment to whatever you want
         // maxReportDelay = 6300;
         // profitFactor = 100;
@@ -75,7 +73,7 @@ contract Strategy is BaseStrategy {
         uint256 totalAssets = want.balanceOf(address(this));
         if (_amountNeeded > totalAssets) {
             _liquidatedAmount = totalAssets;
-            _loss = _amountNeeded.sub(totalAssets);
+            _loss = _amountNeeded - totalAssets;
         } else {
             _liquidatedAmount = _amountNeeded;
         }
@@ -106,5 +104,27 @@ contract Strategy is BaseStrategy {
         view
         override
         returns (address[] memory)
+    {}
+
+    /**
+     * @notice
+     *  Provide an accurate conversion from `_amtInWei` (denominated in wei)
+     *  to `want` (using the native decimal characteristics of `want`).
+     * @dev
+     *  Care must be taken when working with decimals to assure that the conversion
+     *  is compatible. As an example:
+     *
+     *      given 1e17 wei (0.1 ETH) as input, and want is USDC (6 decimals),
+     *      with USDC/ETH = 1800, this should give back 1800000000 (180 USDC)
+     *
+     * @param _amtInWei The amount (in wei/1e-18 ETH) to convert to `want`
+     * @return The amount in `want` of `_amtInEth` converted to `want`
+     **/
+    function ethToWant(uint256 _amtInWei)
+        public
+        view
+        virtual
+        override
+        returns (uint256)
     {}
 }
