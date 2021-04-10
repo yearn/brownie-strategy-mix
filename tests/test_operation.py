@@ -9,11 +9,11 @@ def test_operation(accounts, token, vault, strategy, strategist, amount):
     assert token.balanceOf(vault.address) == amount
 
     # harvest
-    strategy.harvest()
+    strategy.harvest({"from": strategist})
     assert token.balanceOf(strategy.address) == amount
 
     # tend()
-    strategy.tend()
+    strategy.tend({"from": strategist})
 
     # withdrawal
     vault.withdraw({"from": accounts[0]})
@@ -24,12 +24,12 @@ def test_emergency_exit(accounts, token, vault, strategy, strategist, amount):
     # Deposit to the vault
     token.approve(vault.address, amount, {"from": accounts[0]})
     vault.deposit(amount, {"from": accounts[0]})
-    strategy.harvest()
+    strategy.harvest({"from": strategist})
     assert token.balanceOf(strategy.address) == amount
 
     # set emergency and exit
     strategy.setEmergencyExit()
-    strategy.harvest()
+    strategy.harvest({"from": strategist})
     assert token.balanceOf(strategy.address) < amount
 
 
@@ -38,16 +38,20 @@ def test_profitable_harvest(accounts, token, vault, strategy, strategist, amount
     token.approve(vault.address, amount, {"from": accounts[0]})
     vault.deposit(amount, {"from": accounts[0]})
     assert token.balanceOf(vault.address) == amount
+    before_pps = vault.pricePerShare()
 
-    # harvest
-    strategy.harvest()
-    assert token.balanceOf(strategy.address) == amount
+    # Harvest 1: Send funds through the strategy
+    strategy.harvest({"from": strategist})
+    assert strategy.estimatedTotalAssets() == amount
 
-    # You should test that the harvest method is capable of making a profit.
-    # TODO: uncomment the following lines.
-    # strategy.harvest()
-    # chain.sleep(3600 * 24)
-    # assert token.balanceOf(strategy.address) > amount
+    # TODO: Add some code below to simulate earning yield
+
+    # Harvest 2: Realize profit
+    strategy.harvest({"from": strategist})
+    chain.sleep(3600 * 6) # Allow profits to unlock
+    profit = token.balanceOf(vault.address) # Profits go to vault
+    assert token.balanceOf(strategy) + profit > amount
+    assert vault.pricePerShare() > before_pps
 
 
 def test_change_debt(gov, token, vault, strategy, strategist, amount):
@@ -55,12 +59,12 @@ def test_change_debt(gov, token, vault, strategy, strategist, amount):
     token.approve(vault.address, amount, {"from": gov})
     vault.deposit(amount, {"from": gov})
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
-    strategy.harvest()
+    strategy.harvest({"from": strategist})
 
     assert token.balanceOf(strategy.address) == amount / 2
 
     vault.updateStrategyDebtRatio(strategy.address, 10_000, {"from": gov})
-    strategy.harvest()
+    strategy.harvest({"from": strategist})
     assert token.balanceOf(strategy.address) == amount
 
     # In order to pass this tests, you will need to implement prepareReturn.
@@ -98,7 +102,7 @@ def test_triggers(gov, vault, strategy, token, amount, weth, weth_amout):
     token.approve(vault.address, amount, {"from": gov})
     vault.deposit(amount, {"from": gov})
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
-    strategy.harvest()
+    strategy.harvest({"from": strategist})
 
     strategy.harvestTrigger(0)
     strategy.tendTrigger(0)
