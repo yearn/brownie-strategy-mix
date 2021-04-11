@@ -5,6 +5,10 @@ from brownie import Contract
 
 @pytest.fixture
 def gov(accounts):
+    yield accounts.at("0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52", force=True)
+
+@pytest.fixture
+def user(accounts):
     yield accounts[0]
 
 
@@ -40,12 +44,12 @@ def token():
 
 
 @pytest.fixture
-def amount(accounts, token):
+def amount(accounts, token, user):
     amount = 10_000 * 10 ** token.decimals()
     # In order to get some funds for the token you are about to use,
     # it impersonate an exchange address to use it's funds.
     reserve = accounts.at("0xd551234ae421e3bcba99a0da6d736074f22192ff", force=True)
-    token.transfer(accounts[0], amount, {"from": reserve})
+    token.transfer(user, amount, {"from": reserve})
     yield amount
 
 
@@ -56,9 +60,9 @@ def weth():
 
 
 @pytest.fixture
-def weth_amout(gov, weth):
+def weth_amout(user, weth):
     weth_amout = 10 ** weth.decimals()
-    gov.transfer(weth, weth_amout)
+    user.transfer(weth, weth_amout)
     yield weth_amout
 
 
