@@ -21,7 +21,9 @@ def test_operation(
 
     # withdrawal
     vault.withdraw({"from": user})
-    assert pytest.approx(token.balanceOf(user), rel=RELATIVE_APPROX) == user_balance_before
+    assert (
+        pytest.approx(token.balanceOf(user), rel=RELATIVE_APPROX) == user_balance_before
+    )
 
 
 def test_emergency_exit(
@@ -30,12 +32,12 @@ def test_emergency_exit(
     # Deposit to the vault
     token.approve(vault.address, amount, {"from": user})
     vault.deposit(amount, {"from": user})
-    strategy.harvest({"from": strategist})
+    strategy.harvest()
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # set emergency and exit
     strategy.setEmergencyExit()
-    strategy.harvest({"from": strategist})
+    strategy.harvest()
     assert strategy.estimatedTotalAssets() < amount
 
 
@@ -48,33 +50,35 @@ def test_profitable_harvest(
     assert token.balanceOf(vault.address) == amount
 
     # Harvest 1: Send funds through the strategy
-    strategy.harvest({"from": strategist})
-    assert strategy.estimatedTotalAssets() == amount
+    strategy.harvest()
+    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # TODO: Add some code before harvest #2 to simulate earning yield
 
     # Harvest 2: Realize profit
-    strategy.harvest({"from": strategist})
-    chain.sleep(3600 * 6) # 6 hrs needed for profits to unlock
+    strategy.harvest()
+    chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
     chain.mine(1)
-    profit = token.balanceOf(vault.address) # Profits go to vault
+    profit = token.balanceOf(vault.address)  # Profits go to vault
     # TODO: Uncomment the lines below
     # assert token.balanceOf(strategy) + profit > amount
     # assert vault.pricePerShare() > before_pps
 
 
-def test_change_debt(gov, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX):
+def test_change_debt(
+    gov, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
+):
     # Deposit to the vault and harvest
     token.approve(vault.address, amount, {"from": user})
     vault.deposit(amount, {"from": user})
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
-    strategy.harvest({"from": strategist})
+    strategy.harvest()
     half = int(amount / 2)
 
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == half
 
     vault.updateStrategyDebtRatio(strategy.address, 10_000, {"from": gov})
-    strategy.harvest({"from": strategist})
+    strategy.harvest()
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # In order to pass this tests, you will need to implement prepareReturn.
@@ -106,15 +110,17 @@ def test_sweep(gov, vault, strategy, token, user, amount, weth, weth_amout):
     assert weth.address != strategy.want()
     assert weth.balanceOf(user) == 0
     strategy.sweep(weth, {"from": gov})
-    assert weth.balanceOf(gov) - before_balance == weth_amout
+    assert weth.balanceOf(gov) == weth_amout + before_balance
 
 
-def test_triggers(gov, vault, strategy, token, amount, user, weth, weth_amout, strategist):
+def test_triggers(
+    gov, vault, strategy, token, amount, user, weth, weth_amout, strategist
+):
     # Deposit to the vault and harvest
     token.approve(vault.address, amount, {"from": user})
     vault.deposit(amount, {"from": user})
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
-    strategy.harvest({"from": strategist})
+    strategy.harvest()
 
     strategy.harvestTrigger(0)
     strategy.tendTrigger(0)
