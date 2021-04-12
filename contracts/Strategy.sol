@@ -107,4 +107,26 @@ contract Strategy is BaseStrategy {
         override
         returns (address[] memory)
     {}
+
+    /**
+     * @notice
+     *  Provide an accurate conversion from `_amtInWei` (denominated in wei)
+     *  to `want` (using the native decimal characteristics of `want`).
+     * @dev
+     *  Care must be taken when working with decimals to assure that the conversion
+     *  is compatible. As an example:
+     *
+     *      given 1e17 wei (0.1 ETH) as input, and want is USDC (6 decimals),
+     *      with USDC/ETH = 1800, this should give back 1800000000 (180 USDC)
+     *
+     * @param _amtInWei The amount (in wei/1e-18 ETH) to convert to `want`
+     * @return The amount in `want` of `_amtInEth` converted to `want`
+     **/
+    function ethToWant(uint256 _amtInWei)
+        public
+        view
+        virtual
+        override
+        returns (uint256)
+    {}
 }
