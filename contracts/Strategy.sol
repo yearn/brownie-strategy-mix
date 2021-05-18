@@ -81,6 +81,11 @@ contract Strategy is BaseStrategy {
         }
     }
 
+    function liquidateAllPositions() internal override returns (uint256) {
+        // TODO: Liquidate all positions and return the amount freed.
+        return want.balanceOf(address(this));
+    }
+
     // NOTE: Can override `tendTrigger` and `harvestTrigger` if necessary
 
     function prepareMigration(address _newStrategy) internal override {
