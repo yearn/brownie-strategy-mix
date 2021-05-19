@@ -133,5 +133,8 @@ contract Strategy is BaseStrategy {
         virtual
         override
         returns (uint256)
-    {}
+    {
+        // TODO create an accurate price oracle
+        return _amtInWei;
+    }
 }
