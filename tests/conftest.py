@@ -62,6 +62,7 @@ token_addresses = {
         # 'USDC', # USDC        
     ],
     scope="session",
+    autouse=True
 )
 def token(request):
     yield Contract(token_addresses[request.param])
@@ -76,13 +77,25 @@ whale_addresses = {
     "DAI": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503", 
 }
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def token_whale(token):
     yield whale_addresses[token.symbol()]
 
-@pytest.fixture
+token_prices = {
+    "WBTC": 35_000,
+    "WETH": 2_000,
+    "LINK": 20,
+    "YFI": 30_000,
+    "USDT": 1, 
+    "USDC": 1,
+    "DAI": 1, 
+}
+
+@pytest.fixture(autouse=True)
 def amount(token, token_whale, user):
-    amount = 10_000 * 10 ** token.decimals()
+    # this will get the number of tokens ($1m worth of token)
+    amillion = round(1_000_000 / token_prices.symbol())
+    amount = amillion * 10 ** token.decimals()
     # In order to get some funds for the token you are about to use,
     # it impersonate a whale address
     if amount > token.balanceOf(token_whale):
@@ -104,7 +117,7 @@ def weth_amout(user, weth):
     yield weth_amout
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def vault(pm, gov, rewards, guardian, management, token):
     Vault = pm(config["dependencies"][0]).Vault
     vault = guardian.deploy(Vault)
@@ -113,8 +126,16 @@ def vault(pm, gov, rewards, guardian, management, token):
     vault.setManagement(management, {"from": gov})
     yield vault
 
+@pytest.fixture(scope="session")
+def registry():
+    yield Contract("0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
+def live_vault(registry, token):
+    yield registry.latestVault(token)
+
+
+@pytest.fixture(autouse=True)
 def strategy(strategist, keeper, vault, Strategy, gov):
     strategy = strategist.deploy(Strategy, vault)
     strategy.setKeeper(keeper)
