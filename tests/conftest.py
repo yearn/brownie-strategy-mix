@@ -66,13 +66,28 @@ token_addresses = {
 def token(request):
     yield Contract(token_addresses[request.param])
 
+whale_addresses = {
+    "WBTC": "0x28c6c06298d514db089934071355e5743bf21d60",
+    "WETH": "0x28c6c06298d514db089934071355e5743bf21d60",
+    "LINK": "0x28c6c06298d514db089934071355e5743bf21d60",
+    "YFI": "0x28c6c06298d514db089934071355e5743bf21d60",
+    "USDT": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503", 
+    "USDC": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503",
+    "DAI": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503", 
+}
+
+@pytest.fixture(scope="session")
+def token_whale(token):
+    yield whale_addresses[token.symbol()]
+
 @pytest.fixture
-def amount(accounts, token, user):
+def amount(token, token_whale, user):
     amount = 10_000 * 10 ** token.decimals()
     # In order to get some funds for the token you are about to use,
-    # it impersonate an exchange address to use it's funds.
-    reserve = accounts.at("0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643", force=True)
-    token.transfer(user, amount, {"from": reserve})
+    # it impersonate a whale address
+    if amount > token.balanceOf(token_whale):
+        amount = token.balanceOf(token_whale)
+    token.transfer(user, amount, {"from": token_whale})
     yield amount
 
 
