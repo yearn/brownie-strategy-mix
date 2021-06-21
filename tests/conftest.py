@@ -7,6 +7,9 @@ from brownie import Contract
 def gov(accounts):
     yield accounts.at("0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52", force=True)
 
+@pytest.fixture
+def strat_ms(accounts):
+    yield accounts.at("0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7", force=True)
 
 @pytest.fixture
 def user(accounts):
