@@ -135,13 +135,21 @@ def live_vault(registry, token):
     yield registry.latestVault(token)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def strategy(strategist, keeper, vault, Strategy, gov):
     strategy = strategist.deploy(Strategy, vault)
     strategy.setKeeper(keeper)
     vault.addStrategy(strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
     yield strategy
 
+@pytest.fixture
+def cloned_strategy(Strategy, vault, strategy, strategist, gov):
+    # TODO: customize clone method and arguments
+    # TODO: use correct contract name (i.e. replace Strategy)
+    cloned_strategy = strategy.cloneStrategy(strategist, {'from': strategist}).return_value
+    cloned_strategy = Strategy.at(cloned_strategy)
+    vault.addStrategy(cloned_strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
+    yield 
 
 @pytest.fixture(scope="session")
 def RELATIVE_APPROX():
