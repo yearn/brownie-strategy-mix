@@ -1,6 +1,7 @@
 import pytest
 from utils import actions
 
+
 def test_revoke_strategy_from_vault(
     chain, token, vault, strategy, amount, user, gov, RELATIVE_APPROX
 ):
@@ -34,6 +35,7 @@ def test_revoke_strategy_from_strategy(
     strategy.harvest()
     assert pytest.approx(token.balanceOf(vault.address), rel=RELATIVE_APPROX) == amount
 
+
 def test_revoke_with_profit(
     chain, token, vault, strategy, amount, user, gov, RELATIVE_APPROX
 ):
@@ -43,7 +45,7 @@ def test_revoke_with_profit(
     strategy.harvest()
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
-    #TODO: customize generate_profit function
+    # TODO: customize generate_profit function
     actions.generate_profit(amount)
 
     # Revoke strategy

@@ -1,3 +1,7 @@
+import pytest
+from brownie import chain
+import utils
+
 # This file is reserved for standard actions like deposits
 
 
@@ -11,3 +15,15 @@ def user_deposits(user, vault, token, amount):
 def generate_profit(amount):
     # TODO: add action for simulating profit
     return
+
+
+def first_deposit_and_harvest(
+    vault, strategy, token, user, gov, amount, RELATIVE_APPROX
+):
+    # Deposit to the vault and harvest
+    token.approve(vault.address, amount, {"from": user})
+    vault.deposit(amount, {"from": user})
+    chain.sleep(1)
+    strategy.harvest({"from": gov})
+    utils.sleep()
+    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount

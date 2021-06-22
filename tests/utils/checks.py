@@ -19,3 +19,12 @@ def check_strategy_empty(strategy):
 def check_revoked_strategy(vault, strategy):
     print("TODO: check_revoked_strategy")
     return
+
+
+def check_accounting(vault, strategy, totalGain, totalLoss, totalDebt):
+    print("TODO: check_accounting")
+    status = vault.strategies(strategy).dict()
+    assert status["totalGain"] == totalGain
+    assert status["totalLoss"] == totalLoss
+    assert status["totalDebt"] == totalDebt
+    return
