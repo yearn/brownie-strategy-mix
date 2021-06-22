@@ -93,7 +93,7 @@ token_prices = {
 
 @pytest.fixture(autouse=True)
 def amount(token, token_whale, user):
-    # this will get the number of tokens ($1m worth of token)
+    # this will get the number of tokens (around $1m worth of token)
     amillion = round(1_000_000 / token_prices.symbol())
     amount = amillion * 10 ** token.decimals()
     # In order to get some funds for the token you are about to use,
@@ -148,6 +148,7 @@ def cloned_strategy(Strategy, vault, strategy, strategist, gov):
     # TODO: use correct contract name (i.e. replace Strategy)
     cloned_strategy = strategy.cloneStrategy(strategist, {'from': strategist}).return_value
     cloned_strategy = Strategy.at(cloned_strategy)
+    vault.revokeStrategy(strategy)
     vault.addStrategy(cloned_strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
     yield 
 
