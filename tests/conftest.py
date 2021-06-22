@@ -7,9 +7,11 @@ from brownie import Contract
 def gov(accounts):
     yield accounts.at("0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52", force=True)
 
+
 @pytest.fixture
 def strat_ms(accounts):
     yield accounts.at("0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7", force=True)
+
 
 @pytest.fixture
 def user(accounts):
@@ -40,6 +42,7 @@ def strategist(accounts):
 def keeper(accounts):
     yield accounts[5]
 
+
 token_addresses = {
     "WBTC": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",  # WBTC
     "YFI": "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",  # YFI
@@ -59,37 +62,41 @@ token_addresses = {
         # 'LINK', # LINK
         # 'USDT', # USDT
         # 'DAI', # DAI
-        # 'USDC', # USDC        
+        # 'USDC', # USDC
     ],
     scope="session",
-    autouse=True
+    autouse=True,
 )
 def token(request):
     yield Contract(token_addresses[request.param])
+
 
 whale_addresses = {
     "WBTC": "0x28c6c06298d514db089934071355e5743bf21d60",
     "WETH": "0x28c6c06298d514db089934071355e5743bf21d60",
     "LINK": "0x28c6c06298d514db089934071355e5743bf21d60",
     "YFI": "0x28c6c06298d514db089934071355e5743bf21d60",
-    "USDT": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503", 
+    "USDT": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503",
     "USDC": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503",
-    "DAI": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503", 
+    "DAI": "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503",
 }
+
 
 @pytest.fixture(scope="session", autouse=True)
 def token_whale(token):
     yield whale_addresses[token.symbol()]
+
 
 token_prices = {
     "WBTC": 35_000,
     "WETH": 2_000,
     "LINK": 20,
     "YFI": 30_000,
-    "USDT": 1, 
+    "USDT": 1,
     "USDC": 1,
-    "DAI": 1, 
+    "DAI": 1,
 }
+
 
 @pytest.fixture(autouse=True)
 def amount(token, token_whale, user):
@@ -126,9 +133,11 @@ def vault(pm, gov, rewards, guardian, management, token):
     vault.setManagement(management, {"from": gov})
     yield vault
 
+
 @pytest.fixture(scope="session")
 def registry():
     yield Contract("0x50c1a2eA0a861A967D9d0FFE2AE4012c2E053804")
+
 
 @pytest.fixture(scope="session")
 def live_vault(registry, token):
@@ -142,15 +151,19 @@ def strategy(strategist, keeper, vault, Strategy, gov):
     vault.addStrategy(strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
     yield strategy
 
+
 @pytest.fixture
 def cloned_strategy(Strategy, vault, strategy, strategist, gov):
     # TODO: customize clone method and arguments
     # TODO: use correct contract name (i.e. replace Strategy)
-    cloned_strategy = strategy.cloneStrategy(strategist, {'from': strategist}).return_value
+    cloned_strategy = strategy.cloneStrategy(
+        strategist, {"from": strategist}
+    ).return_value
     cloned_strategy = Strategy.at(cloned_strategy)
     vault.revokeStrategy(strategy)
     vault.addStrategy(cloned_strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
-    yield 
+    yield
+
 
 @pytest.fixture(scope="session")
 def RELATIVE_APPROX():
