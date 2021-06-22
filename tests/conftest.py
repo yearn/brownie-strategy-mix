@@ -165,6 +165,6 @@ def cloned_strategy(Strategy, vault, strategy, strategist, gov):
     yield
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def RELATIVE_APPROX():
     yield 1e-5
