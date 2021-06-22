@@ -164,14 +164,16 @@ def cloned_strategy(Strategy, vault, strategy, strategist, gov):
     vault.addStrategy(cloned_strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
     yield
 
+
 @pytest.fixture(autouse=True)
 def withdraw_no_losses(vault, token, amount, user):
     yield
-    if vault.totalSupply() != 0: 
+    if vault.totalSupply() != 0:
         return
     vault.withdraw({"from": user})
     # check that we dont have losses
     assert token.balanceOf(user) >= amount
+
 
 @pytest.fixture(scope="session", autouse=True)
 def RELATIVE_APPROX():
