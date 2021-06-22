@@ -3,7 +3,6 @@ from brownie import reverts
 
 
 def test_restricted_fn_user(strategy, user):
-
     # TODO: add all the external functions that should not be callable by a user (if any)
     # with reverts("!authorized"):
     #     strategy.setter(arg1, arg2, {'from': user})

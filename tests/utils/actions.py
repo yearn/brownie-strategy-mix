@@ -7,6 +7,7 @@ def user_deposits(user, vault, token, amount):
     vault.deposit(amount, {"from": user})
 
 
-def simulate_profit(amount):
+# TODO: add args as required
+def generate_profit(amount):
     # TODO: add action for simulating profit
     return
