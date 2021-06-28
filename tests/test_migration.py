@@ -21,7 +21,7 @@ def test_migration(
     token.approve(vault.address, amount, {"from": user})
     vault.deposit(amount, {"from": user})
     chain.sleep(1)
-    strategy.harvest({'from': gov})
+    strategy.harvest({"from": gov})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # TODO: add other tokens balance
@@ -40,4 +40,4 @@ def test_migration(
     assert pre_want_balance == token.balanceOf(new_strategy)
 
     # check that harvest work as expected
-    new_strategy.harvest({'from': gov})
+    new_strategy.harvest({"from": gov})

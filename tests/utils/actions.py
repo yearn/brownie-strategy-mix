@@ -20,6 +20,7 @@ def generate_loss(amount):
     # TODO: add action for simulating profit
     return
 
+
 def first_deposit_and_harvest(
     vault, strategy, token, user, gov, amount, RELATIVE_APPROX
 ):
