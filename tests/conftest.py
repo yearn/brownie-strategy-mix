@@ -124,8 +124,8 @@ def weth_amount(user, weth):
     yield weth_amount
 
 
-@pytest.fixture(autouse=True)
-def vault(pm, gov, rewards, guardian, management, token):
+@pytest.fixture(scope='function', autouse=True)
+def vault(pm, gov, rewards, guardian, management, token, clean): # clean mentioned to ensure that it is executed before deploying a new vault
     Vault = pm(config["dependencies"][0]).Vault
     vault = guardian.deploy(Vault)
     vault.initialize(token, gov, rewards, "", "", guardian, management)
@@ -180,3 +180,12 @@ def withdraw_no_losses(vault, token, amount, user):
 @pytest.fixture(scope="session", autouse=True)
 def RELATIVE_APPROX():
     yield 1e-5
+
+@pytest.fixture
+def clean(chain):
+    # NOTE: this function will be called before deploying a new vault, once per test function
+    # takes a snapshot of the initial state
+    chain.snapshot()
+    yield
+    # after executing, revert to initial state
+    chain.revert()
