@@ -3,7 +3,7 @@
 #       Show that nothing is lost!
 
 import pytest
-
+from utils import actions
 
 def test_migration(
     chain,
@@ -18,8 +18,8 @@ def test_migration(
     RELATIVE_APPROX,
 ):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
+
     chain.sleep(1)
     strategy.harvest({"from": gov})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount

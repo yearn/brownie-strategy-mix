@@ -6,9 +6,7 @@ def test_profitable_harvest(
     chain, accounts, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
-    assert token.balanceOf(vault.address) == amount
+    actions.user_deposit(user, vault, token, amount)
 
     # Harvest 1: Send funds through the strategy
     chain.sleep(1)
@@ -39,9 +37,7 @@ def test_lossy_harvest(
     chain, accounts, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
-    assert token.balanceOf(vault.address) == amount
+    actions.user_deposit(user, vault, token, amount)
 
     # Harvest 1: Send funds through the strategy
     chain.sleep(1)
@@ -80,9 +76,7 @@ def test_choppy_harvest(
     chain, accounts, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
-    assert token.balanceOf(vault.address) == amount
+    actions.user_deposit(user, vault, token, amount)
 
     # Harvest 1: Send funds through the strategy
     chain.sleep(1)

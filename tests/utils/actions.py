@@ -3,11 +3,11 @@ from brownie import chain
 import utils
 
 # This file is reserved for standard actions like deposits
-def user_deposits(user, vault, token, amount):
+def user_deposit(user, vault, token, amount):
     if token.allowance(user, vault) < amount:
         token.approve(vault, 2 ** 256 - 1, {"from": user})
     vault.deposit(amount, {"from": user})
-
+    assert token.balanceOf(vault.address) == amount
 
 # TODO: add args as required
 def generate_profit(amount):

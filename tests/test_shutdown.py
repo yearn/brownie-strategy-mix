@@ -7,8 +7,7 @@ from utils import checks, actions, utils
 
 def test_shutdown(chain, token, vault, strategy, amount, gov, user, RELATIVE_APPROX):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     chain.sleep(1)
     strategy.harvest({"from": gov})
     utils.sleep()

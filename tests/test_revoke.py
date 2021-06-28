@@ -6,8 +6,7 @@ def test_revoke_strategy_from_vault(
     chain, token, vault, strategy, amount, user, gov, RELATIVE_APPROX
 ):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     chain.sleep(1)
     strategy.harvest({"from": gov})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
@@ -24,8 +23,7 @@ def test_revoke_strategy_from_strategy(
     chain, token, vault, strategy, amount, gov, user, RELATIVE_APPROX
 ):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     chain.sleep(1)
     strategy.harvest({"from": gov})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
@@ -39,8 +37,7 @@ def test_revoke_strategy_from_strategy(
 def test_revoke_with_profit(
     chain, token, vault, strategy, amount, user, gov, RELATIVE_APPROX
 ):
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     chain.sleep(1)
     strategy.harvest({"from": gov})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount

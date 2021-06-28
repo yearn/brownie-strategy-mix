@@ -9,9 +9,7 @@ def test_operation(
 ):
     # Deposit to the vault
     user_balance_before = token.balanceOf(user)
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
-    assert token.balanceOf(vault.address) == amount
+    actions.user_deposit(user, vault, token, amount)
 
     # harvest
     chain.sleep(1)
@@ -32,8 +30,7 @@ def test_emergency_exit(
     chain, accounts, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     chain.sleep(1)
     strategy.harvest({"from": strategist})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
@@ -49,8 +46,7 @@ def test_increase_debt_ratio(
     chain, gov, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
     chain.sleep(1)
     strategy.harvest({"from": strategist})
@@ -68,8 +64,7 @@ def test_decrease_debt_ratio(
     chain, gov, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     vault.updateStrategyDebtRatio(strategy.address, 10_000, {"from": gov})
     chain.sleep(1)
     strategy.harvest({"from": strategist})
@@ -112,8 +107,7 @@ def test_triggers(
     chain, gov, vault, strategy, token, amount, user, weth, weth_amout, strategist
 ):
     # Deposit to the vault and harvest
-    token.approve(vault.address, amount, {"from": user})
-    vault.deposit(amount, {"from": user})
+    actions.user_deposit(user, vault, token, amount)
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
     chain.sleep(1)
     strategy.harvest()
