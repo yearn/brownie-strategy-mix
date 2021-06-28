@@ -5,6 +5,7 @@
 import pytest
 from utils import actions
 
+
 def test_migration(
     chain,
     token,

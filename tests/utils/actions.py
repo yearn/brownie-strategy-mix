@@ -9,6 +9,7 @@ def user_deposit(user, vault, token, amount):
     vault.deposit(amount, {"from": user})
     assert token.balanceOf(vault.address) == amount
 
+
 # TODO: add args as required
 def generate_profit(amount):
     # TODO: add action for simulating profit

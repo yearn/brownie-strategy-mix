@@ -103,9 +103,7 @@ def test_sweep(gov, vault, strategy, token, user, amount, weth, weth_amount):
     assert weth.balanceOf(gov) == weth_amount + before_balance
 
 
-def test_triggers(
-    chain, gov, vault, strategy, token, amount, user, strategist
-):
+def test_triggers(chain, gov, vault, strategy, token, amount, user, strategist):
     # Deposit to the vault and harvest
     actions.user_deposit(user, vault, token, amount)
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
