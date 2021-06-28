@@ -15,11 +15,11 @@ def test_operation(
 
     # harvest
     chain.sleep(1)
-    strategy.harvest()
+    strategy.harvest({'from': strategist})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # tend()
-    strategy.tend()
+    strategy.tend({'from': strategist})
 
     # withdrawal
     vault.withdraw({"from": user})
@@ -35,17 +35,17 @@ def test_emergency_exit(
     token.approve(vault.address, amount, {"from": user})
     vault.deposit(amount, {"from": user})
     chain.sleep(1)
-    strategy.harvest()
+    strategy.harvest({'from': strategist})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # set emergency and exit
     strategy.setEmergencyExit()
     chain.sleep(1)
-    strategy.harvest()
+    strategy.harvest({'from': strategist})
     assert strategy.estimatedTotalAssets() < amount
 
 
-def test_change_debt(
+def test_increase_debt_ratio(
     chain, gov, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
 ):
     # Deposit to the vault and harvest
@@ -53,22 +53,35 @@ def test_change_debt(
     vault.deposit(amount, {"from": user})
     vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
     chain.sleep(1)
-    strategy.harvest()
+    strategy.harvest({'from': strategist})
     half = int(amount / 2)
 
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == half
 
     vault.updateStrategyDebtRatio(strategy.address, 10_000, {"from": gov})
     chain.sleep(1)
-    strategy.harvest()
+    strategy.harvest({'from': strategist})
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
-    # In order to pass this tests, you will need to implement prepareReturn.
-    # TODO: uncomment the following lines.
-    # vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
-    # chain.sleep(1)
-    # strategy.harvest()
-    # assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == half
+
+
+def test_decrease_debt_ratio(
+    chain, gov, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX
+):
+    # Deposit to the vault and harvest
+    token.approve(vault.address, amount, {"from": user})
+    vault.deposit(amount, {"from": user})
+    vault.updateStrategyDebtRatio(strategy.address, 10_000, {"from": gov})
+    chain.sleep(1)
+    strategy.harvest({'from': strategist})
+
+    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
+
+    vault.updateStrategyDebtRatio(strategy.address, 5_000, {"from": gov})
+    chain.sleep(1)
+    strategy.harvest({'from': strategist})
+    half = int(amount / 2)
+    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == half
 
 
 def test_sweep(gov, vault, strategy, token, user, amount, weth, weth_amout):

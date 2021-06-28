@@ -1,4 +1,4 @@
-from utils import actions, checks
+from utils import actions, checks, utils
 import pytest
 
 # tests harvesting a strategy that returns profits correctly
@@ -12,12 +12,16 @@ def test_profitable_harvest(
 
     # Harvest 1: Send funds through the strategy
     chain.sleep(1)
-    strategy.harvest()
-    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
+    strategy.harvest({'from': strategist})
+    total_assets = strategy.estimatedTotalAssets()
+    assert pytest.approx(total_assets, rel=RELATIVE_APPROX) == amount
 
     # TODO: Add some code before harvest #2 to simulate earning yield
     profit_amount = 0
     actions.generate_profit(profit_amount)
+
+    # check that estimatedTotalAssets estimates correctly
+    assert total_assets + profit_amount == strategy.estimatedTotalAssets()
 
     # Harvest 2: Realize profit
     chain.sleep(1)
@@ -40,23 +44,28 @@ def test_lossy_harvest(
 
     # Harvest 1: Send funds through the strategy
     chain.sleep(1)
-    strategy.harvest()
-    assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
+    strategy.harvest({'from': strategist})
+    total_assets = strategy.estimatedTotalAssets()
+    assert pytest.approx(total_assets, rel=RELATIVE_APPROX) == amount
 
     # TODO: Add some code before harvest #2 to simulate a lower pps
     loss_amount = amount * 0.05
     actions.generate_loss(loss_amount)
 
+    # check that estimatedTotalAssets estimates correctly
+    assert total_assets - loss_amount == strategy.estimatedTotalAssets()
+
     # Harvest 2: Realize loss
     chain.sleep(1)
-    strategy.harvest()
+    strategy.harvest({'from': strategist})
     chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
     chain.mine(1)
     profit = token.balanceOf(vault.address)  # Profits go to vault
-    # TODO: Manually calculate impact on totalGain / totalLoss / totalDebt and fill the numbers
+    
+    # check that all changes were reported correctly
     totalGain = 0
-    totalLoss = 0
-    totalDebt = 0
+    totalLoss = loss_amount
+    totalDebt = utils.calc_new_total_debt(amount, 0, loss_amount)
     checks.check_accounting(vault, strategy, totalGain, totalLoss, totalDebt)
 
     # User will withdraw accepting losses
@@ -89,12 +98,11 @@ def test_choppy_harvest(
     # TODO: Manually calculate impact on totalGain / totalLoss / totalDebt and fill the numbers
     totalGain = 0
     totalLoss = loss_amount
-    # TODO JUAN : come back to this
-    totalDebt = 0
+    totalDebt = amount
     checks.check_accounting(vault, strategy, totalGain, totalLoss, totalDebt)
 
     # TODO: Add some code before harvest #3 to simulate a higher pps ()
-    profit_amount = amount * 0.1
+    profit_amount = amount * 0.1 # 10% profit
     actions.generate_profit(profit_amount)
 
     chain.sleep(1)
@@ -104,8 +112,7 @@ def test_choppy_harvest(
     # take into account that losses will be accumulated
     totalGain = profit_amount
     totalLoss = loss_amount
-    # TODO JUAN : come back to this
-    totalDebt = amount + profit_amount 
+    totalDebt = amount
     checks.check_accounting(vault, strategy, totalGain, totalLoss, totalDebt)
 
     # User will withdraw accepting losses

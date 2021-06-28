@@ -3,8 +3,6 @@ from brownie import interface
 import pytest
 
 # This file is reserved for standard checks
-
-
 def check_vault_empty(vault):
     assert vault.totalAssets() == 0
     assert vault.totalSupply() == 0
