@@ -1,8 +1,18 @@
 from utils import actions, checks, utils
 import pytest
 
+
 def test_airdrop(
-    chain, accounts, token, vault, strategy, user, strategist, amount, RELATIVE_APPROX, token_whale
+    chain,
+    accounts,
+    token,
+    vault,
+    strategy,
+    user,
+    strategist,
+    amount,
+    RELATIVE_APPROX,
+    token_whale,
 ):
     # Deposit to the vault
     actions.user_deposit(user, vault, token, amount)
@@ -14,8 +24,8 @@ def test_airdrop(
     assert pytest.approx(total_assets, rel=RELATIVE_APPROX) == amount
 
     # we airdrop tokens to strategy
-    airdrop_amount = amount * 0.1 # 10% of current assets
-    token.transfer(strategy, airdrop_amount, {'from': token_whale})
+    airdrop_amount = amount * 0.1  # 10% of current assets
+    token.transfer(strategy, airdrop_amount, {"from": token_whale})
 
     # check that estimatedTotalAssets estimates correctly
     assert total_assets + airdrop_amount == strategy.estimatedTotalAssets()
@@ -30,4 +40,3 @@ def test_airdrop(
     # TODO: Uncomment the lines below
     assert token.balanceOf(strategy) + profit > amount
     assert vault.pricePerShare() > before_pps
-
