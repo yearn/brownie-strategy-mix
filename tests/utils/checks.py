@@ -15,7 +15,10 @@ def check_strategy_empty(strategy):
 
 
 def check_revoked_strategy(vault, strategy):
-    print("TODO: check_revoked_strategy")
+    status = vault.strategies(strategy).dict()
+    assert status.debtRatio == 0
+    assert status.totalDebt == 0
+
     return
 
 

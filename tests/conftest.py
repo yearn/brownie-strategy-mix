@@ -171,7 +171,9 @@ def withdraw_no_losses(vault, token, amount, user):
     if vault.totalSupply() != 0:
         return
     vault.withdraw({"from": user})
-    # check that we dont have losses
+
+    # check that we dont have previously realised losses
+    # NOTE: this assumes deposit is `amount`
     assert token.balanceOf(user) >= amount
 
 
