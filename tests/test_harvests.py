@@ -24,7 +24,7 @@ def test_profitable_harvest(
     before_pps = vault.pricePerShare()
     # Harvest 2: Realize profit
     chain.sleep(1)
-    tx = strategy.harvest({'from': strategist})
+    tx = strategy.harvest({"from": strategist})
     checks.check_harvest_profit(tx, profit_amount)
 
     chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
@@ -64,7 +64,7 @@ def test_lossy_harvest(
 
     # User will withdraw accepting losses
     vault.withdraw(vault.balanceOf(user), user, 10_000, {"from": user})
-    assert token.balanceOf(user) + loss_amount == amount 
+    assert token.balanceOf(user) + loss_amount == amount
 
 
 # tests harvesting a strategy twice, once with loss and another with profit
@@ -89,7 +89,6 @@ def test_choppy_harvest(
     chain.sleep(1)
     tx = strategy.harvest({"from": strategist})
     checks.check_harvest_loss(tx, loss_amount)
-
 
     # TODO: Add some code before harvest #3 to simulate a higher pps ()
     profit_amount = amount * 0.1  # 10% profit
