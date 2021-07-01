@@ -21,15 +21,16 @@ def test_profitable_harvest(
     # check that estimatedTotalAssets estimates correctly
     assert total_assets + profit_amount == strategy.estimatedTotalAssets()
 
+    before_pps = vault.pricePerShare()
     # Harvest 2: Realize profit
     chain.sleep(1)
     strategy.harvest()
     chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
     chain.mine(1)
     profit = token.balanceOf(vault.address)  # Profits go to vault
-    # TODO: Uncomment the lines below
-    # assert token.balanceOf(strategy) + profit > amount
-    # assert vault.pricePerShare() > before_pps
+
+    assert token.balanceOf(strategy) + profit > amount
+    assert vault.pricePerShare() > before_pps
 
 
 # tests harvesting a strategy that reports losses
@@ -54,20 +55,13 @@ def test_lossy_harvest(
 
     # Harvest 2: Realize loss
     chain.sleep(1)
-    strategy.harvest({"from": strategist})
+    tx = strategy.harvest({"from": strategist})
     chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
     chain.mine(1)
-    profit = token.balanceOf(vault.address)  # Profits go to vault
-
-    # check that all changes were reported correctly
-    totalGain = 0
-    totalLoss = loss_amount
-    totalDebt = utils.calc_new_total_debt(amount, 0, loss_amount)
-    checks.check_accounting(vault, strategy, totalGain, totalLoss, totalDebt)
-
+    tx.events['Harvested']['loss'] == loss_amount
     # User will withdraw accepting losses
     vault.withdraw(vault.balanceOf(user), user, 10_000, {"from": user})
-    assert token.balanceOf(user) == amount + totalLoss
+    assert token.balanceOf(user) + loss_amount == amount 
 
 
 # tests harvesting a strategy twice, once with loss and another with profit
@@ -81,6 +75,7 @@ def test_choppy_harvest(
     # Harvest 1: Send funds through the strategy
     chain.sleep(1)
     strategy.harvest({"from": strategist})
+
     assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
     # TODO: Add some code before harvest #2 to simulate a lower pps
@@ -89,28 +84,20 @@ def test_choppy_harvest(
 
     # Harvest 2: Realize loss
     chain.sleep(1)
-    strategy.harvest({"from": strategist})
+    tx = strategy.harvest({"from": strategist})
+    assert tx.events['Harvested']['loss'] == loss_amount
 
-    # TODO: Manually calculate impact on totalGain / totalLoss / totalDebt and fill the numbers
-    totalGain = 0
-    totalLoss = loss_amount
-    totalDebt = amount
-    checks.check_accounting(vault, strategy, totalGain, totalLoss, totalDebt)
 
     # TODO: Add some code before harvest #3 to simulate a higher pps ()
     profit_amount = amount * 0.1  # 10% profit
     actions.generate_profit(profit_amount)
 
     chain.sleep(1)
-    strategy.harvest({"from": strategist})
-
-    # TODO: Manually calculate impact on totalGain / totalLoss / totalDebt and fill the numbers
-    # take into account that losses will be accumulated
-    totalGain = profit_amount
-    totalLoss = loss_amount
-    totalDebt = amount
-    checks.check_accounting(vault, strategy, totalGain, totalLoss, totalDebt)
+    tx = strategy.harvest({"from": strategist})
+    assert tx.events['Harvested']['gain'] == profit_amount
 
     # User will withdraw accepting losses
     vault.withdraw({"from": user})
-    assert token.balanceOf(user) == amount + totalLoss - totalGain
+
+    # User will take 100% losses and 100% profits
+    assert token.balanceOf(user) == amount + profit_amount - loss_amount
