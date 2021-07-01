@@ -24,7 +24,9 @@ def test_profitable_harvest(
     before_pps = vault.pricePerShare()
     # Harvest 2: Realize profit
     chain.sleep(1)
-    strategy.harvest()
+    tx = strategy.harvest({'from': strategist})
+    checks.check_harvest_profit(tx, profit_amount)
+
     chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
     chain.mine(1)
     profit = token.balanceOf(vault.address)  # Profits go to vault
@@ -56,9 +58,10 @@ def test_lossy_harvest(
     # Harvest 2: Realize loss
     chain.sleep(1)
     tx = strategy.harvest({"from": strategist})
+    checks.check_harvest_loss(tx, loss_amount)
     chain.sleep(3600 * 6)  # 6 hrs needed for profits to unlock
     chain.mine(1)
-    tx.events['Harvested']['loss'] == loss_amount
+
     # User will withdraw accepting losses
     vault.withdraw(vault.balanceOf(user), user, 10_000, {"from": user})
     assert token.balanceOf(user) + loss_amount == amount 
@@ -85,7 +88,7 @@ def test_choppy_harvest(
     # Harvest 2: Realize loss
     chain.sleep(1)
     tx = strategy.harvest({"from": strategist})
-    assert tx.events['Harvested']['loss'] == loss_amount
+    checks.check_harvest_loss(tx, loss_amount)
 
 
     # TODO: Add some code before harvest #3 to simulate a higher pps ()
@@ -94,7 +97,7 @@ def test_choppy_harvest(
 
     chain.sleep(1)
     tx = strategy.harvest({"from": strategist})
-    assert tx.events['Harvested']['gain'] == profit_amount
+    checks.check_harvest_profit(tx, profit_amount)
 
     # User will withdraw accepting losses
     vault.withdraw({"from": user})
