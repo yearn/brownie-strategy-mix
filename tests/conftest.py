@@ -8,6 +8,7 @@ from brownie import Contract
 def shared_setup(fn_isolation):
     pass
 
+
 @pytest.fixture
 def gov(accounts):
     yield accounts.at("0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52", force=True)
@@ -130,9 +131,7 @@ def weth_amount(user, weth):
 
 
 @pytest.fixture(scope="function", autouse=True)
-def vault(
-    pm, gov, rewards, guardian, management, token
-):
+def vault(pm, gov, rewards, guardian, management, token):
     Vault = pm(config["dependencies"][0]).Vault
     vault = guardian.deploy(Vault)
     vault.initialize(token, gov, rewards, "", "", guardian, management)
