@@ -38,6 +38,11 @@ export WEB3_INFURA_PROJECT_ID=YourProjectID
 export ETHERSCAN_TOKEN=YourApiToken
 ```
 
+- Optional Use .env file
+  1. Make a copy of `.env.example`
+  2. Add the values for `ETHERSCAN_TOKEN` and `WEB3_INFURA_PROJECT_ID`
+  NOTE: If you set up a global environment variable, that will take precedence
+
 4. Download the mix.
 
 ```bash
