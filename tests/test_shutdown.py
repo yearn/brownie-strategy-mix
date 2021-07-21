@@ -1,31 +1,8 @@
 # TODO: Add tests that show proper operation of this strategy through "emergencyExit"
 #       Make sure to demonstrate the "worst case losses" as well as the time it takes
 
-import brownie
+from brownie import ZERO_ADDRESS
 import pytest
-
-AddressZero = "0x0000000000000000000000000000000000000000"
-
-def test_emergency_permissions_deny(strategy, strategist, gov, guardian, management, accounts):
-  with brownie.reverts("!authorized"):
-    strategy.setEmergencyExit({"from": accounts[9]})
-
-def test_emergency_permissions_strategist(strategy, strategist, gov, guardian, management, accounts):
-    strategy.setEmergencyExit({"from": strategist})
-    assert strategy.emergencyExit() == True
-
-def test_emergency_permissions_gov(strategy, strategist, gov, guardian, management, accounts):
-    strategy.setEmergencyExit({"from": gov})
-    assert strategy.emergencyExit() == True
-
-def test_emergency_permissions_guardian(strategy, strategist, gov, guardian, management, accounts):
-    strategy.setEmergencyExit({"from": guardian})
-    assert strategy.emergencyExit() == True
-
-def test_emergency_permissions_management(strategy, strategist, gov, guardian, management, accounts):
-    strategy.setEmergencyExit({"from": management})
-    assert strategy.emergencyExit() == True
-
 
 def test_vault_shutdown_can_withdraw(
   chain, token, vault, strategy, user, amount, RELATIVE_APPROX
@@ -36,11 +13,12 @@ def test_vault_shutdown_can_withdraw(
   assert token.balanceOf(vault.address) == amount
 
   if(token.balanceOf(user) > 0):
-      token.transfer(AddressZero, token.balanceOf(user), {"from": user})
+      token.transfer(ZERO_ADDRESS, token.balanceOf(user), {"from": user})
 
   # Harvest 1: Send funds through the strategy
   strategy.harvest()
-  chain.mine(100)
+  chain.sleep(3600*7) 
+  chain.mine(1)
   assert pytest.approx(strategy.estimatedTotalAssets(), rel=RELATIVE_APPROX) == amount
 
   ## Set Emergency
