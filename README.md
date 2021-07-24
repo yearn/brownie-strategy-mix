@@ -59,12 +59,22 @@ To deploy the demo Yearn Strategy in a development environment:
 $ brownie console
 ```
 
-2. Create variables for the Yearn Vault and Want Token addresses. These were obtained from the Yearn Registry. Also, loan the Yearn governance multisig.
+2. Create variables for the Yearn Vault and Want Token addresses. These were obtained from the Yearn Registry. We load them from a different repository found in the brownie-config.yml under dependencies (yearn/yearn-vaults@0.4.3):
 
 ```python
->>> vault = Vault.at("0xBFa4D8AA6d8a379aBFe7793399D3DdaCC5bBECBB")  # yvDAI (v0.2.2)
->>> token = Token.at("0x6b175474e89094c44da98b954eedeac495271d0f")  # DAI
->>> gov = "ychad.eth"  # ENS for Yearn Governance Multisig
+from pathlib import Path
+yearnvaults = project.load(Path.home() / ".brownie" / "packages" / config["dependencies"][0]) #load the base vaults project to access the original Vault contract
+Vault = yearnvaults.Vault
+Token = yearnvaults.Token
+vault = Vault.at("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")
+token = Token("0x6b175474e89094c44da98b954eedeac495271d0f")
+gov = "ychad.eth"  # ENS for Yearn Governance Multisig
+```
+Or we can access them by using the ABI (the jsons you find under build):
+```python
+vault = interface.VaultAPI("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")  # yvDAI (v0.4.3)
+token = interface.IERC20("0x6b175474e89094c44da98b954eedeac495271d0f")  # DAI
+gov = "ychad.eth"  # ENS for Yearn Governance Multisig
 ```
 
 3. Deploy the [`Strategy.sol`](contracts/Strategy.sol) contract.
