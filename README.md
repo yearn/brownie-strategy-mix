@@ -41,7 +41,7 @@ export ETHERSCAN_TOKEN=YourApiToken
 - Optional Use .env file
   1. Make a copy of `.env.example`
   2. Add the values for `ETHERSCAN_TOKEN` and `WEB3_INFURA_PROJECT_ID`
-  NOTE: If you set up a global environment variable, that will take precedence
+     NOTE: If you set up a global environment variable, that will take precedence
 
 4. Download the mix.
 
@@ -97,14 +97,14 @@ Transaction sent: 0xa70b90eb9a9899e8f6e709c53a436976315b4279c4b6797d0a293e169f94
 
 [`contracts/Strategy.sol`](contracts/Strategy.sol) is where you implement your own logic for your strategy. In particular:
 
-* Create a descriptive name for your strategy via `Strategy.name()`.
-* Invest your want tokens via `Strategy.adjustPosition()`.
-* Take profits and report losses via `Strategy.prepareReturn()`.
-* Unwind enough of your position to payback withdrawals via `Strategy.liquidatePosition()`.
-* Unwind all of your positions via `Strategy.exitPosition()`.
-* Fill in a way to estimate the total `want` tokens managed by the strategy via `Strategy.estimatedTotalAssets()`.
-* Migrate all the positions managed by your strategy via `Strategy.prepareMigration()`.
-* Make a list of all position tokens that should be protected against movements via `Strategy.protectedTokens()`.
+- Create a descriptive name for your strategy via `Strategy.name()`.
+- Invest your want tokens via `Strategy.adjustPosition()`.
+- Take profits and report losses via `Strategy.prepareReturn()`.
+- Unwind enough of your position to payback withdrawals via `Strategy.liquidatePosition()`.
+- Unwind all of your positions via `Strategy.exitPosition()`.
+- Fill in a way to estimate the total `want` tokens managed by the strategy via `Strategy.estimatedTotalAssets()`.
+- Migrate all the positions managed by your strategy via `Strategy.prepareMigration()`.
+- Make a list of all position tokens that should be protected against movements via `Strategy.protectedTokens()`.
 
 ## Testing
 
