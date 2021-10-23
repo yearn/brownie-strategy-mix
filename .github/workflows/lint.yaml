@@ -92,4 +92,6 @@ jobs:
       - name: Run black
         run: black --check --include "(tests|scripts)" .
 
-# TODO: Add Slither Static Analyzer
+      - name: Run Slither
+        run: slither . --print human-summary,contract-summary --compile-force-framework brownie
+
