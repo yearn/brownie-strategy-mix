@@ -67,7 +67,7 @@ yearnvaults = project.load(Path.home() / ".brownie" / "packages" / config["depen
 Vault = yearnvaults.Vault
 Token = yearnvaults.Token
 vault = Vault.at("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")
-token = Token("0x6b175474e89094c44da98b954eedeac495271d0f")
+token = Token.at("0x6b175474e89094c44da98b954eedeac495271d0f")
 gov = "ychad.eth"  # ENS for Yearn Governance Multisig
 ```
 Or we can access them by using the ABI (the jsons you find under build):
