@@ -92,7 +92,7 @@ Transaction sent: 0xc8a35b3ecbbed196a344ed6b5c7ee6f50faf9b7eee836044d1c7ffe10093
 ```python
 # 10% of the vault tokens will be allocated to the strategy
 
->>> vault.addStrategy(strategy, 1000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
+>>> vault.addStrategy(strategy, 0, 0, 2 ** 256 - 1, 1_000, {"from": gov})
 Transaction sent: 0xa70b90eb9a9899e8f6e709c53a436976315b4279c4b6797d0a293e169f94d5b4
   Gas price: 0.0 gwei   Gas limit: 6721975
   Transaction confirmed - Block: 9995379   Gas used: 21055 (0.31%)
