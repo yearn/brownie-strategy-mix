@@ -70,10 +70,13 @@ vault = Vault.at("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")
 token = Token.at("0x6b175474e89094c44da98b954eedeac495271d0f")
 gov = "ychad.eth"  # ENS for Yearn Governance Multisig
 ```
-Or we can access them by using the ABI (the jsons you find under build):
-```python
-vault = interface.VaultAPI("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")  # yvDAI (v0.4.3)
-token = interface.IERC20("0x6b175474e89094c44da98b954eedeac495271d0f")  # DAI
+
+or you can get the contracts ABI from etherscan API, make sure you have exported your etherscan token.
+
+```
+from brownie import Contract
+vault = Contract("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")
+token = Contract("0x6b175474e89094c44da98b954eedeac495271d0f")
 gov = "ychad.eth"  # ENS for Yearn Governance Multisig
 ```
 
