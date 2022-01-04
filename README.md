@@ -101,6 +101,8 @@ Transaction sent: 0xa70b90eb9a9899e8f6e709c53a436976315b4279c4b6797d0a293e169f94
   Transaction confirmed - Block: 9995379   Gas used: 21055 (0.31%)
 ```
 
+If you are getting a revert error, it's most likley because the vault can't add more strategies, you can check the `vault.debtRatio()` the value should be under 10,000. You can try to lower one of the existing strategy debt ratio `vault.updateStrategyDebtRatio("0x1676055fE954EE6fc388F9096210E5EbE0A9070c", 0, {"from": gov})`
+
 5. Now we are ready to put our strategy into action!
 
 ```python
