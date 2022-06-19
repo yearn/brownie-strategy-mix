@@ -31,7 +31,12 @@ def get_address(msg: str, default: str = None) -> str:
 
 def main():
     print(f"You are using the '{network.show_active()}' network")
-    dev = accounts.load(click.prompt("Account", type=click.Choice(accounts.load())))
+    actIndex = int(
+        click.prompt(
+            f"Which account index would you like to use? (Enter number 0 - {len(accounts) - 1})"
+        )
+    )
+    dev = accounts[actIndex]
     print(f"You are using: 'dev' [{dev.address}]")
 
     if input("Is there a Vault for this strategy already? y/[N]: ").lower() == "y":
