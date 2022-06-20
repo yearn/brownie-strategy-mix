@@ -88,3 +88,10 @@ def strategy(strategist, keeper, vault, Strategy, gov):
 @pytest.fixture(scope="session")
 def RELATIVE_APPROX():
     yield 1e-5
+
+
+# Function scoped isolation fixture to enable xdist.
+# Snapshots the chain before each test and reverts after test completion.
+@pytest.fixture(scope="function", autouse=True)
+def shared_setup(fn_isolation):
+    pass
