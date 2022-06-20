@@ -24,7 +24,7 @@ Alice can then redeem those shares using `Vault.withdrawAll()` for the correspon
 
 ## Installation and Setup
 
-1. [Install Brownie](https://eth-brownie.readthedocs.io/en/stable/install.html) & [Ganache-CLI](https://github.com/trufflesuite/ganache-cli), if you haven't already.
+1. [Install Brownie](https://eth-brownie.readthedocs.io/en/stable/install.html) & [Ganache](https://github.com/trufflesuite/ganache), if you haven't already. Make sure that the version of Ganache that you install is compatible with Brownie. You can check Brownie's Ganache dependency [here](https://eth-brownie.readthedocs.io/en/stable/install.html#dependencies).
 
 2. Sign up for [Infura](https://infura.io/) and generate an API key. Store it in the `WEB3_INFURA_PROJECT_ID` environment variable.
 
@@ -62,8 +62,8 @@ $ brownie console
 2. Create variables for the Yearn Vault and Want Token addresses. These were obtained from the Yearn Registry. We load them from a different repository found in the brownie-config.yml under dependencies (yearn/yearn-vaults@0.4.3):
 
 ```python
-from pathlib import Path
-yearnvaults = project.load(Path.home() / ".brownie" / "packages" / config["dependencies"][0]) #load the base vaults project to access the original Vault contract
+from brownie import project
+yearnvaults = project.load(config["dependencies"][0]) #load the base vaults project to access the original Vault contract
 Vault = yearnvaults.Vault
 Token = yearnvaults.Token
 vault = Vault.at("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")
