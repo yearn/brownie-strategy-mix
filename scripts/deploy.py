@@ -1,13 +1,11 @@
-from pathlib import Path
-
 from brownie import Strategy, accounts, config, network, project, web3
 from eth_utils import is_checksum_address
 import click
 
-API_VERSION = config["dependencies"][0].split("@")[-1]
-Vault = project.load(
-    Path.home() / ".brownie" / "packages" / config["dependencies"][0]
-).Vault
+yearnDep = config["dependencies"][0]
+
+API_VERSION = yearnDep.split("@")[-1]
+Vault = project.load(yearnDep).Vault
 
 
 def get_address(msg: str, default: str = None) -> str:
