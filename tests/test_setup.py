@@ -3,14 +3,16 @@ from brownie import Contract, Wei
 import pytest
 
 
-def test_strategy_setup(token, comp_token, vault, strategy, trade_factory, sushi_address, uni_address):
-    uint256_max = 2 ** 256 - 1
+def test_strategy_setup(
+    token, comp_token, vault, strategy, trade_factory, sushi_address, uni_address
+):
+    uint256_max = 2**256 - 1
     assert token.allowance(strategy.address, strategy.MORPHO()) == uint256_max
 
     # assert that the default router is sushi
     assert strategy.currentV2Router() == sushi_address
     # assert allowance for comp to Sushi and Uni
-    uint96_max = 2 ** 96 - 1
+    uint96_max = 2**96 - 1
     assert comp_token.allowance(strategy.address, sushi_address) == uint96_max
     assert comp_token.allowance(strategy.address, uni_address) == uint96_max
 

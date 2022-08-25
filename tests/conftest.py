@@ -47,7 +47,9 @@ def token():
 
 @pytest.fixture
 def token_whale(accounts):
-    yield accounts.at("0x5754284f345afc66a98fbb0a0afe71e0f007b949", force=True) #Reserve = Tether: Treasury
+    yield accounts.at(
+        "0x5754284f345afc66a98fbb0a0afe71e0f007b949", force=True
+    )  # Reserve = Tether: Treasury
     # yield accounts.at("0x55fe002aeff02f77364de339a1292923a15844b8", force=True) #Reserve = Circle
 
 
@@ -63,7 +65,7 @@ def amount(accounts, token, user, token_whale):
 
 @pytest.fixture
 def cToken():
-    token_address = "0xf650C3d88D12dB855b8bf7D11Be6C55A4e07dCC9" # cUSDT
+    token_address = "0xf650C3d88D12dB855b8bf7D11Be6C55A4e07dCC9"  # cUSDT
     # token_address = "0x39AA39c021dfbaE8faC545936693aC917d5E7563" # cUSDC
     yield Contract(token_address)
 
@@ -86,7 +88,9 @@ def comp_token():
 
 @pytest.fixture
 def comp_whale(accounts):
-    yield accounts.at("0x5608169973d639649196a84ee4085a708bcbf397", force=True) # Compound: Team 3
+    yield accounts.at(
+        "0x5608169973d639649196a84ee4085a708bcbf397", force=True
+    )  # Compound: Team 3
 
 
 @pytest.fixture
@@ -113,7 +117,9 @@ def vault(pm, gov, rewards, guardian, management, token):
 
 
 @pytest.fixture
-def strategy(strategist, keeper, vault, cToken, Strategy, gov, trade_factory, ymechs_safe):
+def strategy(
+    strategist, keeper, vault, cToken, Strategy, gov, trade_factory, ymechs_safe
+):
     strategy = strategist.deploy(Strategy, vault, cToken, "StrategyMorphoUSDT")
     strategy.setKeeper(keeper)
     vault.addStrategy(strategy, 10_000, 0, 2**256 - 1, 1_000, {"from": gov})
