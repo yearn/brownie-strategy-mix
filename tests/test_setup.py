@@ -38,10 +38,3 @@ def test_set_max_gas_for_matching(strategy):
     new_value = Wei("0.05212 ether")
     strategy.setMaxGasForMatching(new_value)
     assert strategy.maxGasForMatching() == new_value
-
-
-def test_disabling_trade_factory(strategy, comp_token, gov, trade_factory):
-    assert strategy.tradeFactory() == trade_factory.address
-    strategy.removeTradeFactoryPermissions({"from": gov})
-    assert strategy.tradeFactory() == "0x0000000000000000000000000000000000000000"
-    assert comp_token.allowance(strategy.address, trade_factory.address) == 0

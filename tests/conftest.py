@@ -72,7 +72,7 @@ def cToken():
 
 @pytest.fixture
 def trade_factory():
-    yield Contract("0x99d8679bE15011dEAD893EB4F5df474a4e6a8b29")
+    yield Contract("0x7BAF843e06095f68F4990Ca50161C2C4E4e01ec6")
 
 
 @pytest.fixture
