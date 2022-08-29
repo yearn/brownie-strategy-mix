@@ -1,36 +1,33 @@
 # Yearn Strategy Brownie Mix
 
-## Strategy
+## Morpho Strategy
 
 This repo contains a strategy for [Morpho protocol](https://morpho.xyz/) on Ethereum mainnet.
-The strategy supplies the `want` token to Morpho protocol. If the protocol can find a match from the borrowing side it
-connects two sides for a peer-to-peer deal providing [better APY for both sides](https://docs.morpho.xyz/start-here/how-it-works).
+The strategy supplies strategy `want` token to Morpho protocol. If the protocol can find a match from the borrowing side
+it connects two sides for a peer-to-peer deal providing [better APY for both sides](https://docs.morpho.xyz/start-here/how-it-works).
 Otherwise, the liquidity is supplied to the underlying protocol, currently, only Compound, which provides lower APY and
-reward tokens COMP which are swapped for `want` token using ySwap. There is also a fallback option to use Sushi v2 or Uniswap v2 if ySwap is not set.
+reward tokens COMP which are swapped for strategy `want` token using ySwap.
+There is also a fallback option to use Sushi v2 or Uniswap v2 if ySwap is not set.
 When a new borrower comes in, he is matched with the highest liquidity supplier.
 This flow goes until the full p2p liquidity is matched or all provided gas is used.
 
-## What you'll find here
+### Want token - USDT
 
-- Basic Solidity Smart Contract for creating your own Yearn Strategy ([`contracts/Strategy.sol`](contracts/Strategy.sol))
+The strategy and tests are written with `USDT` as `want` token. Strategy can be easily changed to use other tokens like
+`USDC`, `UNI` by just changing strategy constructor parameters.
+For more tokens see [Morpho protocol dashboard](https://compound.morpho.xyz/?network=mainnet).
 
-- Interfaces for some of the most used DeFi protocols on ethereum mainnet. ([`interfaces/`](`interfaces/`))
+### External calls to Morpho
 
-- Sample test suite that runs on mainnet fork. ([`tests/`](tests))
+Link to docs for using [IMorpho interface](interfaces/IMorpho.sol):
 
-This mix is configured for use with [Ganache](https://github.com/trufflesuite/ganache-cli) on a [forked mainnet](https://eth-brownie.readthedocs.io/en/stable/network-management.html#using-a-forked-development-network).
+- [supply](https://developers.morpho.xyz/core-protocol-contracts/morpho/supply)
+- [withdraw](https://developers.morpho.xyz/core-protocol-contracts/morpho/withdraw)
 
-## How does it work for the User
+[ILens interface](interfaces/ILens.sol) is used to fetch the data from Morpho protocol using just view functions:
 
-Let's say Alice holds 100 DAI and wants to start earning yield % on them.
-
-For this Alice needs to `DAI.approve(vault.address, 100)`.
-
-Then Alice will call `Vault.deposit(100)`.
-
-Vault will then transfer 100 DAI from Alice to itself, and mint Alice the corresponding shares.
-
-Alice can then redeem those shares using `Vault.withdrawAll()` for the corresponding DAI balance (exchanged at `Vault.pricePerShare()`).
+- [getUserUnclaimedRewards](https://developers.morpho.xyz/lens#getuserunclaimedrewards)
+- [getCurrentSupplyBalanceInOf](https://developers.morpho.xyz/lens#getcurrentsupplybalanceinof)
 
 ## Installation and Setup
 
@@ -201,4 +198,3 @@ If you are using Ganache to fork a network, then you may have issues with the bl
 
 - Yearn [Discord channel](https://discord.com/invite/6PNv2nF/)
 - Brownie [Gitter channel](https://gitter.im/eth-brownie/community)
-
