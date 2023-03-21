@@ -62,8 +62,8 @@ $ brownie console
 2. Create variables for the Yearn Vault and Want Token addresses. These were obtained from the Yearn Registry. We load them from a different repository found in the brownie-config.yml under dependencies (yearn/yearn-vaults@0.4.3):
 
 ```python
-from pathlib import Path
-yearnvaults = project.load(Path.home() / ".brownie" / "packages" / config["dependencies"][0]) #load the base vaults project to access the original Vault contract
+from brownie import project
+yearnvaults = project.load(config["dependencies"][0]) #load the base vaults project to access the original Vault contract
 Vault = yearnvaults.Vault
 Token = yearnvaults.Token
 vault = Vault.at("0xdA816459F1AB5631232FE5e97a05BBBb94970c95")
